@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">PopularMovies Stage1</string>
+    <string name="error_message">An error has occurred. Please try again by click on refresh </string>
+    <string name="todo">TODO</string>
+    <string name="overview">Overview</string>
+    <string name="release_date">Release date :</string>
+    <string name="sort_py">sort py</string>
+    <string name="top_rated">top rated</string>
+    <string name="popular">popular</string>
+    <string name="refresh">Refresh</string>
+    <string name="check_intenet">please check internet conncetion</string>
+</resources>
