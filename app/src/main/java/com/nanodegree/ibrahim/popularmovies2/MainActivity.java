@@ -112,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     private void loadMoviesData() {
         showMoviesDataView();
         //pass selcted String param from SharedPrefManager
+        if( SharedPrefManager.getInstance(this).getPrefUrlSellected()==null){
+            new FetchMoviesTask(new FetchMyDataTaskCompleteListener(),
+                    POPULAR_PART).execute();
+        }
         new FetchMoviesTask(new FetchMyDataTaskCompleteListener(),
                 SharedPrefManager.getInstance(this).getPrefUrlSellected()).execute();
     }

@@ -29,7 +29,6 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.IMAGE_URL;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.W500;
 
 /**
- *
  * Created by ibrahim on 29/04/18.
  */
 
@@ -37,7 +36,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     private final Context context;
     /*get Movies Class as object inside list to set and get all data from it */
     private ArrayList<Movies> listMovie;
-     private final OnItemClickListener listener;
+    private final OnItemClickListener listener;
 
     public MoviesAdapter(MainActivity context, ArrayList<Movies> movies, OnItemClickListener listener) {
         this.listMovie = movies;
@@ -114,23 +113,24 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
                     )
                     .into(poster);
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick();
 
-                   // probably set ImageView.scaleType to `fitXY` so it stretches
+                    // probably set ImageView.scaleType to `fitXY` so it stretches
         /*set on click for image view with intent PutExtra data from current position*/
 
-                            Intent intent = new Intent(context, DetailsActivity.class);
-                            Bundle extras = new Bundle();
-                            extras.putString(EXTRA_TITLE, item.getPoster_path());
-                            extras.putString(EXTRA_URL, title);
+                    Intent intent = new Intent(context, DetailsActivity.class);
+                    Bundle extras = new Bundle();
+                    extras.putString(EXTRA_TITLE, item.getPoster_path());
+                    extras.putString(EXTRA_URL, title);
                     extras.putString(EXTRA_ID, String.valueOf(item.getId()));
                     extras.putString(EXTRA_YEAR, String.valueOf(item.getRelease_date()));
-                            extras.putString(EXTRA_RATE, String.valueOf(item.getVotAverage()));
-                            extras.putString(EXTRA_OVERVIEW, item.getOverview());
+                    extras.putString(EXTRA_RATE, String.valueOf(item.getVotAverage()));
+                    extras.putString(EXTRA_OVERVIEW, item.getOverview());
 
-                            intent.putExtras(extras);
-                            context.startActivity(intent);
+                    intent.putExtras(extras);
+                    context.startActivity(intent);
 
 
                 }

@@ -13,6 +13,8 @@ import java.util.Scanner;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.API_KEY;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.BAS_URL;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.POPULAR_PART;
+import static com.nanodegree.ibrahim.popularmovies2.data.Contract.TOP_RATED_PART;
+import static com.nanodegree.ibrahim.popularmovies2.data.Contract.VIDEOS;
 
 
 /**
@@ -36,15 +38,9 @@ final class NetworkUtils {
         /*String selected  in first time will come empty so we
         must check if it will be null i make default value of String selected
         just the url will come full not divided*/
-        if (selected == null) {
-            builtUri = Uri.parse(DEFAULT_MOVIES_URL).buildUpon()
+            builtUri = Uri.parse(parsUrl(selected)).buildUpon()
                     .build();
 
-        } else {
-/* The string you will be given will be selected either as==>"popular" or ==>"top_rated" */
-            builtUri = Uri.parse(BAS_URL + selected.trim() + API_KEY).buildUpon()
-                    .build();
-        }
         //  Return the URL used to query API
         URL url = null;
         try {
@@ -84,5 +80,17 @@ final class NetworkUtils {
         }
     }
 
+    public static String parsUrl(String url){
+        String getUrl = null;
+        if (url == null) {
+            getUrl = DEFAULT_MOVIES_URL;
+        }else if(url .equals( TOP_RATED_PART)||url.equals(POPULAR_PART)){
+            getUrl=BAS_URL + url.trim() + API_KEY;
+
+        }else if (url .equals(VIDEOS)){
+            getUrl=BAS_URL + url.trim() + API_KEY;
+        }
+        return getUrl;
+    }
 }
 

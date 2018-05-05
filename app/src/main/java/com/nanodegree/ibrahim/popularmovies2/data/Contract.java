@@ -18,6 +18,8 @@ public class Contract {
     public static final String BAS_URL = "https://api.themoviedb.org/3/movie/";
     public static final String POPULAR_PART = "popular";
     public static final String TOP_RATED_PART = "top_rated ";
+    public static final String VIDEOS = "videos ";
+
     //keyes of intent
     public static final String EXTRA_TITLE = "extra_title ";
     public static final String EXTRA_URL = "extra_url ";
