@@ -38,9 +38,15 @@ final class NetworkUtils {
         /*String selected  in first time will come empty so we
         must check if it will be null i make default value of String selected
         just the url will come full not divided*/
-            builtUri = Uri.parse(parsUrl(selected)).buildUpon()
+        if (selected == null) {
+            builtUri = Uri.parse(DEFAULT_MOVIES_URL).buildUpon()
                     .build();
 
+        } else {
+/* The string you will be given will be selected either as==>"popular" or ==>"top_rated" */
+            builtUri = Uri.parse(BAS_URL + selected.trim() + API_KEY).buildUpon()
+                    .build();
+        }
         //  Return the URL used to query API
         URL url = null;
         try {
@@ -80,17 +86,35 @@ final class NetworkUtils {
         }
     }
 
-    public static String parsUrl(String url){
-        String getUrl = null;
-        if (url == null) {
-            getUrl = DEFAULT_MOVIES_URL;
-        }else if(url .equals( TOP_RATED_PART)||url.equals(POPULAR_PART)){
-            getUrl=BAS_URL + url.trim() + API_KEY;
+    public static URL buildVideoUr(String selected,String id) {
+        Uri builtUri;
+        /*String selected  in first time will come empty so we
+        must check if it will be null i make default value of String selected
+        just the url will come full not divided*/
 
-        }else if (url .equals(VIDEOS)){
-            getUrl=BAS_URL + url.trim() + API_KEY;
+        builtUri = Uri.parse(parsVideoUrl(selected,id)).buildUpon()
+                .build();
+
+
+        //  Return the URL used to query API
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
-        return getUrl;
+
+        Log.v(TAG, "Built URI " + url);
+
+        return url;
+    }
+    public static String parsVideoUrl(String ved,String id){
+        String getUrl = null;
+        if (ved != null) {
+            getUrl = BAS_URL+id.trim()+"/"+ved.trim()+API_KEY;
+            //    https://api.themoviedb.org/3/movie/337167/videos?api_key=fa22ceab3172625817f5b2523e53ecd2
+        }        return getUrl;
+
     }
 }
 

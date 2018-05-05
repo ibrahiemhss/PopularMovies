@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nanodegree.ibrahim.popularmovies2.adapters.MoviesAdapter;
 import com.nanodegree.ibrahim.popularmovies2.data.SharedPrefManager;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.AsyncTaskCompleteListener;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.OnItemClickListener;

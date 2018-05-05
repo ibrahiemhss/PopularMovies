@@ -1,41 +1,46 @@
 package com.nanodegree.ibrahim.popularmovies2.utilities;
+
 import android.os.AsyncTask;
 
-
 import com.nanodegree.ibrahim.popularmovies2.interfaces.AsyncTaskCompleteListener;
-import com.nanodegree.ibrahim.popularmovies2.model.Movies;
+import com.nanodegree.ibrahim.popularmovies2.model.Videos;
 
 import java.net.URL;
 import java.util.ArrayList;
 
-//perform network requests by AsyncTask
-public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movies>> {
+/**
+ * Created by ibrahim on 05/05/18.
+ */
 
-    private final AsyncTaskCompleteListener<ArrayList<Movies>> listener;
+public class FetchVideosTask extends AsyncTask<String, Void, ArrayList<Videos>> {
+
+    private final AsyncTaskCompleteListener<ArrayList<Videos>> listener;
     private final String selction;
+    private final String id;
 
-    public FetchMoviesTask(AsyncTaskCompleteListener<ArrayList<Movies>> listener, String selction) {
+    public FetchVideosTask(AsyncTaskCompleteListener<ArrayList<Videos>> listener, String selction, String id) {
         this.listener = listener;
         this.selction = selction;
+        this.id = id;
     }
 
 
     //doInBackground method to perform  network requests
     @Override
-    protected ArrayList<Movies> doInBackground(String... params) {
+    protected ArrayList<Videos> doInBackground(String... params) {
 
 
 
                             /* If there's no zip code, there's nothing to look up. */
         // *url from methode NetworkUtils.buildUrl by parsing the selected sort of review Movie in path*/
-        URL moviesRequestUrl = NetworkUtils.buildUrl(selction);
+        URL moviesRequestUrl = NetworkUtils.buildVideoUr(selction,id);
 
         try {
                             /*get the value json data com from url
                   return value from  OpenMoviesUtils class
                    by parseing   json data  into it */
-            return OpenMoviesUtils
-                    .getMovies(NetworkUtils
+            return OpenVedioUtils
+                    .getVideos(NetworkUtils
                             .getResponseFromHttpUrl(moviesRequestUrl));
 
 
@@ -46,9 +51,9 @@ public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movies>> 
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Movies> MoviesData) {
-        super.onPostExecute(MoviesData);
-        listener.onTaskComplete(MoviesData);
+    protected void onPostExecute(ArrayList<Videos>videosData) {
+        super.onPostExecute(videosData);
+        listener.onTaskComplete(videosData);
     }
 
 

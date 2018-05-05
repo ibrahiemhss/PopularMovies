@@ -1,4 +1,4 @@
-package com.nanodegree.ibrahim.popularmovies2;
+package com.nanodegree.ibrahim.popularmovies2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.nanodegree.ibrahim.popularmovies2.DetailsActivity;
+import com.nanodegree.ibrahim.popularmovies2.MainActivity;
+import com.nanodegree.ibrahim.popularmovies2.R;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.OnItemClickListener;
 import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 
