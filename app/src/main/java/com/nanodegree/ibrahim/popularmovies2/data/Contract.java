@@ -24,6 +24,8 @@ public class Contract {
     public static final String EXTRA_YEAR = "extra_year ";
     public static final String EXTRA_RATE = "extra_rate ";
     public static final String EXTRA_OVERVIEW = "extra_overview ";
+    public static final String EXTRA_ID = "extra_id ";
+
     //the url of value of image view
     public static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
     public static final String W185 = "w185";

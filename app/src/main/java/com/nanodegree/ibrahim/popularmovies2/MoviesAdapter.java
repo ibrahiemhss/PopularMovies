@@ -19,6 +19,7 @@ import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 
 import java.util.ArrayList;
 
+import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_ID;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_OVERVIEW;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_RATE;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_TITLE;
@@ -91,10 +92,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         public final TextView mMovieTextView;
         public final ImageView poster;
 
+
         public MoviesAdapterViewHolder(View view) {
             super(view);
             mMovieTextView = view.findViewById(R.id.tv_movie_data);
             poster = view.findViewById(R.id.poster_img);
+
         }
 
         public void bind(final Movies item, final OnItemClickListener listener) {
@@ -121,7 +124,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
                             Bundle extras = new Bundle();
                             extras.putString(EXTRA_TITLE, item.getPoster_path());
                             extras.putString(EXTRA_URL, title);
-                            extras.putString(EXTRA_YEAR, String.valueOf(item.getRelease_date()));
+                    extras.putString(EXTRA_ID, String.valueOf(item.getId()));
+                    extras.putString(EXTRA_YEAR, String.valueOf(item.getRelease_date()));
                             extras.putString(EXTRA_RATE, String.valueOf(item.getVotAverage()));
                             extras.putString(EXTRA_OVERVIEW, item.getOverview());
 

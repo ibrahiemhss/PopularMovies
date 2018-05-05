@@ -20,6 +20,13 @@ public class Movies implements Parcelable {
     private long popularity;
     private String poster_path;
     private String original_language;
+    private String original_title;
+    private ArrayList<String> genre_ids;
+    private long id;
+    private String backdrop_path;
+    private boolean adult;
+    private String overview;
+    private String release_date;
 
     public static String getTAG() {
         return TAG;
@@ -93,13 +100,6 @@ public class Movies implements Parcelable {
         return CREATOR;
     }
 
-    private String original_title;
-    private ArrayList<String> genre_ids;
-    private long id;
-    private String backdrop_path;
-    private boolean adult;
-    private String overview;
-    private String release_date;
 
     /*After implementing the `Parcelable` interface, we need to create the
     `Parcelable.Creator<Movies> CREATOR` constant for our class;

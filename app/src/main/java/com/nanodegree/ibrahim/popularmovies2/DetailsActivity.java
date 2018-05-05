@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_ID;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_OVERVIEW;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_RATE;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_TITLE;
@@ -42,12 +43,19 @@ public class DetailsActivity extends AppCompatActivity {
         TextView mOverview = findViewById(R.id.tv_overview);
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         TextView mTxtTitle = findViewById(R.id.tv_title);
+         TextView        id = findViewById(R.id.tv_id);
+
 
         /*make object sith value that come from intent adapter*/
         Bundle extras = getIntent().getExtras();
         //===============================================//
        /*check the data that come with inient if it is  empty  or not */
         assert extras != null;
+        if (extras.getString(EXTRA_ID) != null) {
+            /*set Text from Intent to show the value of movie title */
+            id.setText(extras.getString(EXTRA_ID));
+
+        }
         if (extras.getString(EXTRA_TITLE) != null) {
             /*set Text from Intent to show the value of movie title */
             mUrl = extras.getString(EXTRA_TITLE);
