@@ -13,8 +13,6 @@ import java.util.Scanner;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.API_KEY;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.BAS_URL;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.POPULAR_PART;
-import static com.nanodegree.ibrahim.popularmovies2.data.Contract.TOP_RATED_PART;
-import static com.nanodegree.ibrahim.popularmovies2.data.Contract.VIDEOS;
 
 
 /**
@@ -108,7 +106,7 @@ final class NetworkUtils {
 
         return url;
     }
-    public static String parsVideoUrl(String ved,String id){
+    private static String parsVideoUrl(String ved, String id){
         String getUrl = null;
         if (ved != null) {
             getUrl = BAS_URL+id.trim()+"/"+ved.trim()+API_KEY;

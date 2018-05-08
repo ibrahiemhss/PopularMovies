@@ -1,37 +1,54 @@
 package com.nanodegree.ibrahim.popularmovies2.utilities;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.AsyncTaskLoader;
 
 import com.nanodegree.ibrahim.popularmovies2.interfaces.AsyncTaskCompleteListener;
+import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 import com.nanodegree.ibrahim.popularmovies2.model.Videos;
 
 import java.net.URL;
 import java.util.ArrayList;
 
 /**
+ *
  * Created by ibrahim on 05/05/18.
  */
 
-public class FetchVideosTask extends AsyncTask<String, Void, ArrayList<Videos>> {
+public class FetchVideosTask extends AsyncTaskLoader< ArrayList<Videos>> {
+
 
     private final AsyncTaskCompleteListener<ArrayList<Videos>> listener;
     private final String selction;
     private final String id;
+    private ArrayList<Videos> videos;
 
-    public FetchVideosTask(AsyncTaskCompleteListener<ArrayList<Videos>> listener, String selction, String id) {
+    public FetchVideosTask(@NonNull Context context, AsyncTaskCompleteListener<ArrayList<Videos>> listener, String id) {
+        super(context);
         this.listener = listener;
-        this.selction = selction;
+        this.selction = com.nanodegree.ibrahim.popularmovies2.data.Contract.VIDEOS;
         this.id = id;
     }
 
-
-    //doInBackground method to perform  network requests
     @Override
-    protected ArrayList<Videos> doInBackground(String... params) {
+    protected void onStartLoading() {
+        if (videos != null) {
+            // Delivers any previously loaded data immediately
+            deliverResult(videos);
+        } else {
+            // Force a new load
+            forceLoad();
+        }
+    }
+    //doInBackground method to perform  network requests
 
-
-
-                            /* If there's no zip code, there's nothing to look up. */
+    @Nullable
+    @Override
+    public ArrayList<Videos> loadInBackground() {
+                          /* If there's no zip code, there's nothing to look up. */
         // *url from methode NetworkUtils.buildUrl by parsing the selected sort of review Movie in path*/
         URL moviesRequestUrl = NetworkUtils.buildVideoUr(selction,id);
 
@@ -49,11 +66,11 @@ public class FetchVideosTask extends AsyncTask<String, Void, ArrayList<Videos>> 
             return null;
         }
     }
+    public void deliverResult( ArrayList<Videos> videos) {
+        videos = videos;
+        super.deliverResult(videos);
+        listener.onTaskComplete(videos);
 
-    @Override
-    protected void onPostExecute(ArrayList<Videos>videosData) {
-        super.onPostExecute(videosData);
-        listener.onTaskComplete(videosData);
     }
 
 

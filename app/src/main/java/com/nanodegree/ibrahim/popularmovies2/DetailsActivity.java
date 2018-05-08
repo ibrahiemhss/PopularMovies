@@ -2,8 +2,10 @@ package com.nanodegree.ibrahim.popularmovies2;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,8 +22,11 @@ import com.bumptech.glide.request.target.Target;
 import com.nanodegree.ibrahim.popularmovies2.adapters.VideosAdapter;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.AsyncTaskCompleteListener;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.OnItemClickListener;
+import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 import com.nanodegree.ibrahim.popularmovies2.model.Videos;
 import com.nanodegree.ibrahim.popularmovies2.utilities.FetchVideosTask;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+
 
 import java.util.ArrayList;
 
@@ -32,16 +37,13 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_TITLE;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_URL;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_YEAR;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.IMAGE_URL;
-import static com.nanodegree.ibrahim.popularmovies2.data.Contract.POPULAR_PART;
-import static com.nanodegree.ibrahim.popularmovies2.data.Contract.VIDEOS;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.W185;
 
 /**
  * @see <a href="https://stackoverflow.com/questions/26788464/how-to-change-color-of-the-back-arrow-in-the-new-material-theme">http://google.com</a>
  */
-public class DetailsActivity extends AppCompatActivity implements OnItemClickListener {
+public class DetailsActivity extends AppCompatActivity implements OnItemClickListener  , LoaderCallbacks<ArrayList<Videos>> {
     private static final String TAG = "DetailsActivity";
-    private static final int ANIMATION_DURATION = 200;
 
     private String mUrl;
     private String mTitle;
@@ -49,8 +51,9 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
     private ArrayList<Videos> videosArrayList;
     private VideosAdapter mAdapter;
     private ProgressBar mLoadingIndicator;
-
-String extra_id;
+    private LinearLayoutManager layoutManager;
+private String extra_id;
+    private static final int MOVIE_LOADER_ID = 0;
 
 
     @SuppressLint("PrivateResource")
@@ -64,7 +67,7 @@ String extra_id;
         TextView mOverview = findViewById(R.id.tv_overview);
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         TextView mTxtTitle = findViewById(R.id.tv_title);
-         TextView        id = findViewById(R.id.tv_id);
+  //       TextView        id = findViewById(R.id.tv_id);
         setRecyclerView();
         mLoadingIndicator = findViewById(R.id.pb_loading_videos);
 
@@ -148,17 +151,20 @@ String extra_id;
         return super.onOptionsItemSelected(item);
     }
 
-    public void setRecyclerView(){
+    private void setRecyclerView(){
                 OnItemClickListener listener = this;
 
         videosArrayList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.recyclerview_vedioes);
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
+     //   mRecyclerView.setLayoutManager(layoutManager);
 
       //  mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-
+         layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
+        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         /*
          * The MoviesAdapter is responsible for linking our movies data with the Views that
@@ -169,6 +175,28 @@ String extra_id;
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
         mRecyclerView.setAdapter(mAdapter);
 
+        //https://stackoverflow.com/questions/44843803/recyclerview-scroll-using-button-action-up-and-down-buttons-in-activity-or-fragm
+        findViewById(R.id.btn_move_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int totalItemCount = mRecyclerView.getAdapter().getItemCount();
+                if (totalItemCount <= 0) return;
+                int lastVisibleItemIndex = layoutManager.findLastVisibleItemPosition();
+
+                if (lastVisibleItemIndex >= totalItemCount) return;
+                layoutManager.smoothScrollToPosition(mRecyclerView,null,lastVisibleItemIndex+1);
+            }
+        });
+
+      findViewById(R.id.btn_move_forward).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              int firstVisibleItemIndex = layoutManager.findFirstCompletelyVisibleItemPosition();
+              if (firstVisibleItemIndex > 0) {
+                  layoutManager.smoothScrollToPosition(mRecyclerView,null,firstVisibleItemIndex-1);
+              }
+          }
+      });
     }
 
     @Override
@@ -177,9 +205,11 @@ String extra_id;
     }
     private void loadVideosData() {
         showMoviesDataView();
-        //pass selcted String param from SharedPrefManager
-            new FetchVideosTask(new FetchMyDataTaskCompleteListener(),
-                    VIDEOS, extra_id).execute();
+        int loaderId = MOVIE_LOADER_ID;
+
+        LoaderCallbacks<ArrayList<Videos>> callback = DetailsActivity.this;
+        Bundle bundleForLoader = null;
+        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
 
     }
 
@@ -190,6 +220,24 @@ String extra_id;
         /* Then, make sure the movies data is visible */
        mRecyclerView.setVisibility(View.VISIBLE);
     }
+
+    @NonNull
+    @Override
+    public Loader<ArrayList<Videos>> onCreateLoader(int id, @Nullable Bundle args) {
+        return   new FetchVideosTask(this,new FetchMyDataTaskCompleteListener(),
+                extra_id);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ArrayList<Videos>> loader, ArrayList<Videos> data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ArrayList<Videos>> loader) {
+
+    }
+
     private class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<ArrayList<Videos>>
     {
 
@@ -207,9 +255,8 @@ String extra_id;
                 /*ubdate the value of mAdapter by sending the value of arraylist inside it* */
                 mAdapter.updateVideos(videosArrayList);
                 mAdapter.notifyDataSetChanged();
-            } else {
-                //     showErrorMessage();
             }
-
         }}
+
+
 }

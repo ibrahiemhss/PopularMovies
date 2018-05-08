@@ -21,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name="com.nanodegree.ibrahim.popularmovies2.WebViewActivity"/>
         <activity
             android:name="com.nanodegree.ibrahim.popularmovies2.DetailsActivity"
             android:parentActivityName="com.nanodegree.ibrahim.popularmovies2.MainActivity"
@@ -31,6 +32,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nanodegree.ibrahim.popularmovies2.MainActivity" />
         </activity>
+
     </application>
 
 </manifest>

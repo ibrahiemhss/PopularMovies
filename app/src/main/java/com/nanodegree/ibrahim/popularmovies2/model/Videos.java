@@ -1,6 +1,7 @@
 package com.nanodegree.ibrahim.popularmovies2.model;
 
 /**
+ *
  * Created by ibrahim on 05/05/18.
  */
 

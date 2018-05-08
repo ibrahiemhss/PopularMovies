@@ -4,6 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +25,8 @@ import com.nanodegree.ibrahim.popularmovies2.data.SharedPrefManager;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.AsyncTaskCompleteListener;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.OnItemClickListener;
 import com.nanodegree.ibrahim.popularmovies2.model.Movies;
-import com.nanodegree.ibrahim.popularmovies2.utilities.FetchMoviesTask;
+import com.nanodegree.ibrahim.popularmovies2.utilities.FetchMoviesTaskLoader;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
 import java.util.ArrayList;
 
@@ -29,7 +34,7 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.POPULAR_PART;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.TOP_RATED_PART;
 
 
-public class MainActivity extends AppCompatActivity implements OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements OnItemClickListener , LoaderManager.LoaderCallbacks<ArrayList<Movies>> {
     private static final String TAG = "Movies";
     private static final String STATE_MOVIES = "state_movies";
     private RecyclerView mRecyclerView;
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     private ArrayList<Movies> moviesArrayList;
     private MoviesAdapter mAdapter;
     private Menu menu;
+    private static final int MOVIE_LOADER_ID = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             }
         });
         /* Once all of our views are setup, we can load the movies data. */
-        loadMoviesData();
+     loadMoviesData();
+
 
     }
 
@@ -112,13 +119,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
      */
     private void loadMoviesData() {
         showMoviesDataView();
-        //pass selcted String param from SharedPrefManager
-        if( SharedPrefManager.getInstance(this).getPrefUrlSellected()==null){
-            new FetchMoviesTask(new FetchMyDataTaskCompleteListener(),
-                    POPULAR_PART).execute();
-        }
-        new FetchMoviesTask(new FetchMyDataTaskCompleteListener(),
-                SharedPrefManager.getInstance(this).getPrefUrlSellected()).execute();
+        int loaderId = MOVIE_LOADER_ID;
+
+        LoaderCallbacks<ArrayList<Movies>> callback = MainActivity.this;
+        Bundle bundleForLoader = null;
+        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+
     }
 
     /**
@@ -209,6 +215,46 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     }
 
+    @   NonNull
+    @Override
+    public Loader<ArrayList<Movies>> onCreateLoader(int id, @Nullable Bundle args) {
+
+        return    new FetchMoviesTaskLoader(this,new AsyncTaskCompleteListener<ArrayList<Movies>>() {
+                @Override
+                public void onTaskComplete(ArrayList<Movies> result) {
+                }
+            });
+
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ArrayList<Movies>> loader, ArrayList<Movies> data) {
+        // do something with the result
+        //after loading data Progress Bar will disappear
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        if (data != null) {
+            showMoviesDataView();
+                /*set the the of our moviesArrayList from the value that com from asyncTask ( onPostExecute  parameter
+                 * to save it inside onSaveInstanceState
+                 * */
+            moviesArrayList=data;
+                /*ubdate the value of mAdapter by sending the value of arraylist inside it* */
+            mAdapter.updateMovies(moviesArrayList);
+            mAdapter.notifyDataSetChanged();
+        }
+        else {
+            showErrorMessage();
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ArrayList<Movies>> data) {
+        loadMoviesData();
+
+    }
+
+/*
     private class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<ArrayList<Movies>>
     {
 
@@ -220,20 +266,25 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (result != null) {
                 showMoviesDataView();
-                /*set the the of our moviesArrayList from the value that com from asyncTask ( onPostExecute  parameter
+                */
+/*set the the of our moviesArrayList from the value that com from asyncTask ( onPostExecute  parameter
                  * to save it inside onSaveInstanceState
-                 * */
+                 * *//*
+
                 moviesArrayList=result;
-                /*ubdate the value of mAdapter by sending the value of arraylist inside it* */
+                */
+/*ubdate the value of mAdapter by sending the value of arraylist inside it* *//*
+
                 mAdapter.updateMovies(moviesArrayList);
                 mAdapter.notifyDataSetChanged();
             }
             else {
                 showErrorMessage();
             }
+*/
 
-        }
-    }
+
+
 
 
 

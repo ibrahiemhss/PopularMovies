@@ -1,6 +1,5 @@
 package com.nanodegree.ibrahim.popularmovies2.utilities;
 
-import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 import com.nanodegree.ibrahim.popularmovies2.model.Videos;
 
 import org.json.JSONArray;
@@ -10,10 +9,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
+ *
  * Created by ibrahim on 05/05/18.
  */
 
-public class OpenVedioUtils {
+class OpenVedioUtils {
 
     public static ArrayList<Videos> getVideos(String moviesJsonStr)
 
@@ -56,11 +56,11 @@ public class OpenVedioUtils {
                         /* Get the JSON object representing the -->...name... from -->JSONObject(results)*/
             name = objResult.optString(NAME);
                         /* Get the JSON object representing the--> ....site.... from--> JSONObject(results)*/
-            site = objResult.getString(SITE);
+            site = objResult.optString(SITE);
                        /* Get the JSON object representing the -->....size.... from--> JSONObject(results)*/
-            size = objResult.getString(SIZE);
+            size = objResult.optString(SIZE);
                         /* Get the JSON object representing the -->....type.... from--> JSONObject(results)*/
-            type = objResult.getString(TYPE);
+            type = objResult.optString(TYPE);
 
             videos.setKey(key);
             videos.setName(name);

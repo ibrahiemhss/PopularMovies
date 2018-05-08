@@ -1,7 +1,9 @@
 package com.nanodegree.ibrahim.popularmovies2.adapters;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,21 +19,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nanodegree.ibrahim.popularmovies2.DetailsActivity;
-import com.nanodegree.ibrahim.popularmovies2.MainActivity;
 import com.nanodegree.ibrahim.popularmovies2.R;
+import com.nanodegree.ibrahim.popularmovies2.WebViewActivity;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.OnItemClickListener;
 import com.nanodegree.ibrahim.popularmovies2.model.Videos;
 
 import java.util.ArrayList;
 
+import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_WEBVIEW_URL;
+
 /**
+ *
  * Created by ibrahim on 05/05/18.
  */
 
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdapterViewHolder> {
     private final Context context;
     /*get Movies Class as object inside list to set and get all data from it */
-    private static final int ANIMATION_DURATION = 200;
 
     private ArrayList<Videos> listVideos;
     private final OnItemClickListener listener;
@@ -98,17 +102,21 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdap
 
         }
 
+        @SuppressLint("SetJavaScriptEnabled")
         public void bind(final Videos item, final OnItemClickListener listener) {
 
-            final String yotube ="https://www.youtube.com/watch?v="+item.getKey();
-            mMvideosTypeTextView.setText(item.getName());
-            https://api.themoviedb.org/3/movie/337167/videos?api_key=fa22ceab3172625817f5b2523e53ecd2
-            Log.v(TAG,"yotubeUrl="+yotube);
+            final String yotubeUrl ="https://www.youtube.com/watch?v="+item.getKey();
+            mMvideosTypeTextView.setText(item.getType());
+            //https://api.themoviedb.org/3/movie/337167/videos?api_key=fa22ceab3172625817f5b2523e53ecd2
+            Log.v(TAG,"yotubeUrl="+yotubeUrl);
             WebSettings webSettings = mWebview.getSettings();
             webSettings.setJavaScriptEnabled(true);
-            mWebview.getSettings().setBuiltInZoomControls(true); // allow pinch to zooom
+            mWebview.getSettings().setBuiltInZoomControls(false); // allow pinch to zooom
             mWebview.getSettings().setDisplayZoomControls(false);
           //  mWebview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+         /*   mWebview.setLayoutParams(new LinearLayout.LayoutParams(
+                    context.getResources().getDisplayMetrics().widthPixels,
+                    (int) (3 *context.getResources().getDisplayMetrics().density)));*/
 
             mWebview.setWebViewClient(new WebViewClient() {
                 @SuppressWarnings("deprecation")
@@ -124,8 +132,22 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdap
                 }
             });
 
-            mWebview .loadUrl(yotube);
+            mWebview .loadUrl(yotubeUrl);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick();
 
+                    // probably set ImageView.scaleType to `fitXY` so it stretches
+        /*set on click for image view with intent PutExtra data from current position*/
+
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    intent.putExtra(EXTRA_WEBVIEW_URL,yotubeUrl);
+                    context.startActivity(intent);
+
+
+                }
+            });
 
         }
     }

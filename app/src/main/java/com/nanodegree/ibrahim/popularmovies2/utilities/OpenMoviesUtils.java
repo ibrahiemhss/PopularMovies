@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
+ *
  * Created by *i*brahim on 28/04/18.
  */
 class OpenMoviesUtils {

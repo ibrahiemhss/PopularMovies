@@ -32,6 +32,7 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.IMAGE_URL;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.W500;
 
 /**
+ *
  * Created by ibrahim on 29/04/18.
  */
 
