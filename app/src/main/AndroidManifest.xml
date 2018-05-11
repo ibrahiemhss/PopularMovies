@@ -32,6 +32,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nanodegree.ibrahim.popularmovies2.MainActivity" />
         </activity>
+        <provider
+            android:name="com.nanodegree.ibrahim.popularmovies2.data.MoviesContentProvider"
+            android:authorities="com.nanodegree.ibrahim.popularmovies2"
+            android:exported="false"/>
 
     </application>
 

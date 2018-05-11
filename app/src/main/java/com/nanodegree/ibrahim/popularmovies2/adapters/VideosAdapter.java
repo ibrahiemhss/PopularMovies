@@ -90,7 +90,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdap
      */
     public class VediosAdapterViewHolder extends RecyclerView.ViewHolder {
 
-        // Within MoviesAdapterViewHolder ///////////////////////////////////////////////////////
+        // Within VediosAdapterViewHolder ///////////////////////////////////////////////////////
         public final TextView mMvideosTypeTextView;
         public final WebView mWebview;
 
@@ -107,16 +107,11 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdap
 
             final String yotubeUrl ="https://www.youtube.com/watch?v="+item.getKey();
             mMvideosTypeTextView.setText(item.getType());
-            //https://api.themoviedb.org/3/movie/337167/videos?api_key=fa22ceab3172625817f5b2523e53ecd2
             Log.v(TAG,"yotubeUrl="+yotubeUrl);
             WebSettings webSettings = mWebview.getSettings();
             webSettings.setJavaScriptEnabled(true);
             mWebview.getSettings().setBuiltInZoomControls(false); // allow pinch to zooom
             mWebview.getSettings().setDisplayZoomControls(false);
-          //  mWebview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-         /*   mWebview.setLayoutParams(new LinearLayout.LayoutParams(
-                    context.getResources().getDisplayMetrics().widthPixels,
-                    (int) (3 *context.getResources().getDisplayMetrics().density)));*/
 
             mWebview.setWebViewClient(new WebViewClient() {
                 @SuppressWarnings("deprecation")
@@ -140,7 +135,6 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdap
 
                     // probably set ImageView.scaleType to `fitXY` so it stretches
         /*set on click for image view with intent PutExtra data from current position*/
-
                     Intent intent = new Intent(context, WebViewActivity.class);
                     intent.putExtra(EXTRA_WEBVIEW_URL,yotubeUrl);
                     context.startActivity(intent);

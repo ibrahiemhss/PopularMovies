@@ -1,6 +1,8 @@
 package com.nanodegree.ibrahim.popularmovies2.utilities;
 
 
+import android.util.Log;
+
 import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 
 import org.json.JSONArray;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
  * Created by *i*brahim on 28/04/18.
  */
 class OpenMoviesUtils {
+    private static final String TAG = "OpenMoviesUtils";
 
     public static ArrayList<Movies> getMovies(String moviesJsonStr)
 
@@ -120,7 +123,9 @@ class OpenMoviesUtils {
             movies.setAdult(isAdult);
             movies.setOverview(overview);
             movies.setRelease_date(releasDate);
+            movies.setFavorite();
 
+            Log.i(TAG, "FetchMovies\ntitle\n"+title+"\nposter:"+posterPath+"\noverview:"+overview+"\ndate:"+releasDate+"\noverage:"+voteAverage);
 
             moviesArrayList.add(movies);
 

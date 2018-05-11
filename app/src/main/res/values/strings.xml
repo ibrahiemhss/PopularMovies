@@ -9,4 +9,6 @@
     <string name="popular">popular</string>
     <string name="refresh">Refresh</string>
     <string name="check_intenet">please check internet conncetion</string>
+    <string name="add_favorite">add to favorite</string>
+    <string name="favorites">favorites</string>
 </resources>

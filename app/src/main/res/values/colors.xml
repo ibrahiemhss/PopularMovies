@@ -9,5 +9,9 @@
     <color name="colorBlack">#000000</color>
     <color name="colorGray">#504f4f</color>
 
+    <!-- colors for task favorite selection -->
+    <color name="materialRed" tools:keep="@color/materialRed">#E74C3C</color>
+    <color name="materialOrange" tools:keep="@color/materialOrange">#E67E22</color>
+    <color name="materialYellow" tools:keep="@color/materialYellow">#F1C40F</color>
 
 </resources>

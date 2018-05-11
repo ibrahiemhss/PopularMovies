@@ -1,6 +1,8 @@
 package com.nanodegree.ibrahim.popularmovies2;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,18 +22,22 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.nanodegree.ibrahim.popularmovies2.adapters.VideosAdapter;
+import com.nanodegree.ibrahim.popularmovies2.data.Contract;
+import com.nanodegree.ibrahim.popularmovies2.data.MovieHelper;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.AsyncTaskCompleteListener;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.OnItemClickListener;
-import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 import com.nanodegree.ibrahim.popularmovies2.model.Videos;
 import com.nanodegree.ibrahim.popularmovies2.utilities.FetchVideosTask;
+
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
 
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_ID;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_OVERVIEW;
+import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_POSTER_PATH;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_RATE;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_TITLE;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_URL;
@@ -42,7 +48,7 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.W185;
 /**
  * @see <a href="https://stackoverflow.com/questions/26788464/how-to-change-color-of-the-back-arrow-in-the-new-material-theme">http://google.com</a>
  */
-public class DetailsActivity extends AppCompatActivity implements OnItemClickListener  , LoaderCallbacks<ArrayList<Videos>> {
+public class DetailsActivity extends AppCompatActivity implements OnItemClickListener, LoaderCallbacks<ArrayList<Videos>> {
     private static final String TAG = "DetailsActivity";
 
     private String mUrl;
@@ -52,43 +58,44 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
     private VideosAdapter mAdapter;
     private ProgressBar mLoadingIndicator;
     private LinearLayoutManager layoutManager;
-private String extra_id;
+    private String extra_id;
     private static final int MOVIE_LOADER_ID = 0;
-
+    private ImageView mAddFovorite;
 
     @SuppressLint("PrivateResource")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
+        final MovieHelper mMovieHelper = new MovieHelper(this);
         ImageView mImag_poster = findViewById(R.id.tv_movie_poster);
         TextView mYear = findViewById(R.id.tv_year);
         TextView mOverview = findViewById(R.id.tv_overview);
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         TextView mTxtTitle = findViewById(R.id.tv_title);
-  //       TextView        id = findViewById(R.id.tv_id);
+        //       TextView        id = findViewById(R.id.tv_id);
         setRecyclerView();
         mLoadingIndicator = findViewById(R.id.pb_loading_videos);
+        mAddFovorite = findViewById(R.id.tv_favorite);
 
         /*make object sith value that come from intent adapter*/
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         //===============================================//
        /*check the data that come with inient if it is  empty  or not */
         assert extras != null;
         if (extras.getString(EXTRA_ID) != null) {
             /*set Text from Intent to show the value of movie title */
-            extra_id=extras.getString(EXTRA_ID);
+            extra_id = extras.getString(EXTRA_ID);
 
         }
         if (extras.getString(EXTRA_TITLE) != null) {
             /*set Text from Intent to show the value of movie title */
-            mUrl = extras.getString(EXTRA_TITLE);
+            mTitle = extras.getString(EXTRA_TITLE);
 
         }
-        if (extras.getString(EXTRA_URL) != null) {
+        if (extras.getString(EXTRA_POSTER_PATH) != null) {
        /*get String of movie poster Url from intent  */
-            mTitle = extras.getString(EXTRA_URL);
+            mUrl = extras.getString(EXTRA_POSTER_PATH);
 
         }
         if (extras.getString(EXTRA_YEAR) != null) {
@@ -134,6 +141,56 @@ private String extra_id;
                 )
                 .into(mImag_poster);
 
+        /*
+        * check if id inside table favorites to change color of favorite icon*/
+        if (mMovieHelper.verification(extra_id)) {
+            mAddFovorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
+
+        }
+        mAddFovorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Insert new movies data via a ContentResolver
+                if (!mMovieHelper.verification(extra_id)) {
+                    ContentValues contentValues = new ContentValues();
+                    // Put the  ==>id     into ContentValues
+                    contentValues.put(Contract.MoviesEntry.COLUMN_MOVIES_ID, extras.getString(EXTRA_ID));
+                    // Put the  ==>title    into ContentValues
+                    contentValues.put(Contract.MoviesEntry.COLUMN_TITLE, extras.getString(EXTRA_TITLE));
+                    // Put the  ==>poster path    into ContentValues
+                    contentValues.put(Contract.MoviesEntry.COLUMN_POSTER_PATH, extras.getString(EXTRA_POSTER_PATH));
+                    // Put the  ==>release date   into   ContentValues
+                    contentValues.put(Contract.MoviesEntry.COLUMN_RELEASE_DATE, extras.getString(EXTRA_YEAR));
+                    // Put the  ==>vot Overage     into ContentValues
+                    contentValues.put(Contract.MoviesEntry.COLUMN_VOTE_AVERAGE, extras.getString(EXTRA_RATE));
+                    // Put the  ==>overview     into ContentValues
+                    contentValues.put(Contract.MoviesEntry.COLUMN_OVERVIEW, extras.getString(EXTRA_OVERVIEW));
+                    /* get the ContentProvider URI (movies) and Insert contentValues via a ContentResolver inside table movies*/
+                    Uri uri = getContentResolver().insert(Contract.MoviesEntry.CONTENT_URI, contentValues);
+                    if (uri != null) {
+                        Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+                    }
+                    mAddFovorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
+
+                }
+                if (!mMovieHelper.verification(extra_id)) {
+
+                    Uri uri = Contract.MoviesEntry.CONTENT_URI;
+                    if (uri != null) {
+                        Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+                    }
+                    assert uri != null;
+                    uri = uri.buildUpon().appendPath(extra_id).build();
+
+                    // COMPLETED (2) Delete a single row of data using a ContentResolver
+                    getContentResolver().delete(uri, null, null);
+                    mAddFovorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_gray));
+
+                }
+
+
+            }
+        });
 
         loadVideosData();
     }
@@ -151,18 +208,18 @@ private String extra_id;
         return super.onOptionsItemSelected(item);
     }
 
-    private void setRecyclerView(){
-                OnItemClickListener listener = this;
+    private void setRecyclerView() {
+        OnItemClickListener listener = this;
 
         videosArrayList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.recyclerview_vedioes);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
-     //   mRecyclerView.setLayoutManager(layoutManager);
+        //   mRecyclerView.setLayoutManager(layoutManager);
 
-      //  mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-         layoutManager
+        //  mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
@@ -184,47 +241,46 @@ private String extra_id;
                 int lastVisibleItemIndex = layoutManager.findLastVisibleItemPosition();
 
                 if (lastVisibleItemIndex >= totalItemCount) return;
-                layoutManager.smoothScrollToPosition(mRecyclerView,null,lastVisibleItemIndex+1);
+                layoutManager.smoothScrollToPosition(mRecyclerView, null, lastVisibleItemIndex + 1);
             }
         });
 
-      findViewById(R.id.btn_move_forward).setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              int firstVisibleItemIndex = layoutManager.findFirstCompletelyVisibleItemPosition();
-              if (firstVisibleItemIndex > 0) {
-                  layoutManager.smoothScrollToPosition(mRecyclerView,null,firstVisibleItemIndex-1);
-              }
-          }
-      });
+        findViewById(R.id.btn_move_forward).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int firstVisibleItemIndex = layoutManager.findFirstCompletelyVisibleItemPosition();
+                if (firstVisibleItemIndex > 0) {
+                    layoutManager.smoothScrollToPosition(mRecyclerView, null, firstVisibleItemIndex - 1);
+                }
+            }
+        });
     }
 
     @Override
     public void onItemClick() {
 
     }
+
     private void loadVideosData() {
         showMoviesDataView();
-        int loaderId = MOVIE_LOADER_ID;
-
         LoaderCallbacks<ArrayList<Videos>> callback = DetailsActivity.this;
         Bundle bundleForLoader = null;
-        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, callback);
 
     }
 
     private void showMoviesDataView() {
         /* First, make sure the error is invisible */
-     //   mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-    //    mRefresh.setVisibility(View.INVISIBLE);
+        //   mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        //    mRefresh.setVisibility(View.INVISIBLE);
         /* Then, make sure the movies data is visible */
-       mRecyclerView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @NonNull
     @Override
     public Loader<ArrayList<Videos>> onCreateLoader(int id, @Nullable Bundle args) {
-        return   new FetchVideosTask(this,new FetchMyDataTaskCompleteListener(),
+        return new FetchVideosTask(this, new FetchMyDataTaskCompleteListener(),
                 extra_id);
     }
 
@@ -238,8 +294,7 @@ private String extra_id;
 
     }
 
-    private class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<ArrayList<Videos>>
-    {
+    private class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<ArrayList<Videos>> {
 
         @Override
         public void onTaskComplete(ArrayList<Videos> result) {
@@ -256,7 +311,8 @@ private String extra_id;
                 mAdapter.updateVideos(videosArrayList);
                 mAdapter.notifyDataSetChanged();
             }
-        }}
+        }
+    }
 
 
 }

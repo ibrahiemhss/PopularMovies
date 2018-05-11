@@ -27,6 +27,15 @@ public class Movies implements Parcelable {
     private boolean adult;
     private String overview;
     private String release_date;
+    private boolean favorite;
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite() {
+        this.favorite = false;
+    }
 
     public static String getTAG() {
         return TAG;

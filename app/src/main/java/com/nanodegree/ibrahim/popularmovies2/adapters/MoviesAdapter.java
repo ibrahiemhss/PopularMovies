@@ -2,6 +2,7 @@ package com.nanodegree.ibrahim.popularmovies2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -22,11 +23,12 @@ import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 
 import java.util.ArrayList;
 
+import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_FAVORITE;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_ID;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_OVERVIEW;
+import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_POSTER_PATH;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_RATE;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_TITLE;
-import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_URL;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_YEAR;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.IMAGE_URL;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.W500;
@@ -39,6 +41,7 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.W500;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
     private final Context context;
     /*get Movies Class as object inside list to set and get all data from it */
+    private Cursor mCursor;
     private ArrayList<Movies> listMovie;
     private final OnItemClickListener listener;
 
@@ -67,6 +70,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public void onBindViewHolder(@NonNull MoviesAdapterViewHolder holder, int position) {
         holder.bind(listMovie.get(position), listener);
+
 
     }
 
@@ -105,6 +109,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
         public void bind(final Movies item, final OnItemClickListener listener) {
 
+
             final String title = item.getTilte();
             mMovieTextView.setText(title);
             final String url = IMAGE_URL.trim() + W500.trim() + item.getPoster_path();
@@ -121,17 +126,20 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
                 public void onClick(View v) {
                     listener.onItemClick();
 
-                    // probably set ImageView.scaleType to `fitXY` so it stretches
-        /*set on click for image view with intent PutExtra data from current position*/
+        // probably set ImageView.scaleType to `fitXY` so it stretches
+         /*set on click for image view with intent PutExtra data from current position*/
 
                     Intent intent = new Intent(context, DetailsActivity.class);
                     Bundle extras = new Bundle();
-                    extras.putString(EXTRA_TITLE, item.getPoster_path());
-                    extras.putString(EXTRA_URL, title);
+                    extras.putString(EXTRA_TITLE, item.getTilte());
+                  //  extras.putString(EXTRA_URL, title);
+                    extras.putString(EXTRA_POSTER_PATH, item.getPoster_path());
                     extras.putString(EXTRA_ID, String.valueOf(item.getId()));
                     extras.putString(EXTRA_YEAR, String.valueOf(item.getRelease_date()));
                     extras.putString(EXTRA_RATE, String.valueOf(item.getVotAverage()));
                     extras.putString(EXTRA_OVERVIEW, item.getOverview());
+                    extras.putBoolean(EXTRA_FAVORITE, item.isFavorite());
+
 
                     intent.putExtras(extras);
                     context.startActivity(intent);

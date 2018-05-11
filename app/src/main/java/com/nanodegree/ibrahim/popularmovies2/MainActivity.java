@@ -25,6 +25,7 @@ import com.nanodegree.ibrahim.popularmovies2.data.SharedPrefManager;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.AsyncTaskCompleteListener;
 import com.nanodegree.ibrahim.popularmovies2.interfaces.OnItemClickListener;
 import com.nanodegree.ibrahim.popularmovies2.model.Movies;
+import com.nanodegree.ibrahim.popularmovies2.utilities.FetchMovieFromSqlite;
 import com.nanodegree.ibrahim.popularmovies2.utilities.FetchMoviesTaskLoader;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
@@ -45,19 +46,27 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     private MoviesAdapter mAdapter;
     private Menu menu;
     private static final int MOVIE_LOADER_ID = 2;
-
+    private LoaderCallbacks<ArrayList<Movies>> callback;
+    private boolean isFavorite;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /*make sure if  savedInstanceState not null after rotate or exit the application
          * snd it have the key that come from onSaveInstanceState with Bundle
          * */
-        OnItemClickListener listener = this;
+
         if (savedInstanceState != null && savedInstanceState.containsKey(STATE_MOVIES)) {
             //after check get the value of that key in  moviesArrayList
             moviesArrayList = savedInstanceState.getParcelableArrayList(STATE_MOVIES);
         }
         setContentView(R.layout.activity_main);
+
+        /*set default value to favorite to false to not get the favorite when openinig activity*/
+        isFavorite=false;
+
+        callback = MainActivity.this;
+
+        OnItemClickListener listener = this;
 
         moviesArrayList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.recyclerview_movies);
@@ -118,12 +127,29 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
      * background method to get the movies data in the background.
      */
     private void loadMoviesData() {
-        showMoviesDataView();
-        int loaderId = MOVIE_LOADER_ID;
-
-        LoaderCallbacks<ArrayList<Movies>> callback = MainActivity.this;
+        /*
+         * This ID will uniquely identify the Loader. We can use it,to get a handle
+         * on our Loader at a later point in time through the support LoaderManager.
+         */
+        /*
+         * From MainActivity, we have implemented the LoaderCallbacks interface with the type of
+         * String array. (implements  LoaderCallbacks<ArrayList<Movies>>) The variable callback is passed
+         * to the call to initLoader below. This means that whenever the loaderManager has
+         * something to notify us of, it will do so through this callback.
+         */
+          /*
+         * The second parameter of the initLoader method below is a Bundle. Optionally, you can
+         * pass a Bundle to initLoader that you can then access from within the onCreateLoader
+         * callback. In our case, we don't actually use the Bundle, but it's here in case we wanted
+         * to.
+         */
         Bundle bundleForLoader = null;
-        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+           /*
+         * Ensures a loader is initialized and active. If the loader doesn't already exist, one is
+         * created and (if the activity/fragment is currently started) starts the loader. Otherwise
+         * the last created loader is re-used.
+         */
+        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, callback);
 
     }
 
@@ -141,24 +167,36 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-
             case R.id.menu_last:
+                isFavorite=false;
                 //change title of menu  that show in  toolbar by sellected itme text
                 setMenuName(TOP_RATED_PART);
+                invalidateData();
                 //save String==> top_rated   so will change the URL and therefore bring the json based on==> top_rated
                 SharedPrefManager.getInstance(MainActivity.this).setPrefUrlSellected(TOP_RATED_PART);
                 //recall method  loadMoviesData to get data from new url
-                loadMoviesData();
+                getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
 
                 return true;
             case R.id.menu_popularity:
+                invalidateData();
                 //change title of menu  that show in  toolbar by sellected itme text
                 setMenuName(POPULAR_PART);
+                isFavorite=false;
+
                 //save String==> popular   so will change the URL and therefore bring the json based on ==>popular
                 SharedPrefManager.getInstance(MainActivity.this).setPrefUrlSellected(POPULAR_PART);
                 //recall method  loadMoviesData to get data from new url
-                loadMoviesData();
-
+                getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+                return true;
+            case R.id.menu_favorites:
+                invalidateData();
+                //change title of menu  that show in  toolbar by sellected itme text
+                setMenuName(getResources().getString(R.string.favorites));
+                /*set value of isFavorite to make loader  read date from FetchMovieFromSqlite class*/
+                isFavorite=true;
+                //restart loader to get new value of favorites
+                getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -219,27 +257,45 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public Loader<ArrayList<Movies>> onCreateLoader(int id, @Nullable Bundle args) {
 
-        return    new FetchMoviesTaskLoader(this,new AsyncTaskCompleteListener<ArrayList<Movies>>() {
+/*if statement here to change source of data from internet or from sqlite as favorites*/
+         if(isFavorite) {
+/*return data from FetchMovieFromSqlite class*/
+             return new FetchMovieFromSqlite(this, new AsyncTaskCompleteListener<ArrayList<Movies>>() {
+                 @Override
+                 public void onTaskComplete(ArrayList<Movies> result) {
+
+                 }
+             });
+
+         }else {
+/*any thing not true  data will returned  from FetchMoviesTaskLoader class*/
+
+            return new FetchMoviesTaskLoader(this,new AsyncTaskCompleteListener<ArrayList<Movies>>() {
                 @Override
                 public void onTaskComplete(ArrayList<Movies> result) {
+
                 }
             });
+        }
 
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<ArrayList<Movies>> loader, ArrayList<Movies> data) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<Movies>> loader, ArrayList<Movies> result) {
         // do something with the result
         //after loading data Progress Bar will disappear
         mLoadingIndicator.setVisibility(View.INVISIBLE);
-        if (data != null) {
+
+        if (result != null) {
             showMoviesDataView();
                 /*set the the of our moviesArrayList from the value that com from asyncTask ( onPostExecute  parameter
                  * to save it inside onSaveInstanceState
                  * */
-            moviesArrayList=data;
+            moviesArrayList=result;
                 /*ubdate the value of mAdapter by sending the value of arraylist inside it* */
             mAdapter.updateMovies(moviesArrayList);
+
+
             mAdapter.notifyDataSetChanged();
         }
         else {
@@ -250,42 +306,16 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<Movies>> data) {
-        loadMoviesData();
+
 
     }
-
-/*
-    private class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<ArrayList<Movies>>
-    {
-
-        @Override
-        public void onTaskComplete(ArrayList<Movies> result)
-        {
-            // do something with the result
-            //after loading data Progress Bar will disappear
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (result != null) {
-                showMoviesDataView();
-                */
-/*set the the of our moviesArrayList from the value that com from asyncTask ( onPostExecute  parameter
-                 * to save it inside onSaveInstanceState
-                 * *//*
-
-                moviesArrayList=result;
-                */
-/*ubdate the value of mAdapter by sending the value of arraylist inside it* *//*
-
-                mAdapter.updateMovies(moviesArrayList);
-                mAdapter.notifyDataSetChanged();
-            }
-            else {
-                showErrorMessage();
-            }
-*/
-
-
-
-
+    /**
+     * This method is used when we are resetting data, so that at one point in time during a
+     * refresh of our data, you can see that there is no data showing.
+     */
+    private void invalidateData() {
+        mAdapter.updateMovies(null);
+    }
 
 
 }

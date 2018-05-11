@@ -1,13 +1,11 @@
 package com.nanodegree.ibrahim.popularmovies2.utilities;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.nanodegree.ibrahim.popularmovies2.interfaces.AsyncTaskCompleteListener;
-import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 import com.nanodegree.ibrahim.popularmovies2.model.Videos;
 
 import java.net.URL;
@@ -48,13 +46,13 @@ public class FetchVideosTask extends AsyncTaskLoader< ArrayList<Videos>> {
     @Nullable
     @Override
     public ArrayList<Videos> loadInBackground() {
-                          /* If there's no zip code, there's nothing to look up. */
+          /* If there's no zip code, there's nothing to look up. */
         // *url from methode NetworkUtils.buildUrl by parsing the selected sort of review Movie in path*/
         URL moviesRequestUrl = NetworkUtils.buildVideoUr(selction,id);
 
         try {
                             /*get the value json data com from url
-                  return value from  OpenMoviesUtils class
+                  return value from  OpenVedioUtils class
                    by parseing   json data  into it */
             return OpenVedioUtils
                     .getVideos(NetworkUtils
@@ -67,7 +65,6 @@ public class FetchVideosTask extends AsyncTaskLoader< ArrayList<Videos>> {
         }
     }
     public void deliverResult( ArrayList<Videos> videos) {
-        videos = videos;
         super.deliverResult(videos);
         listener.onTaskComplete(videos);
 
