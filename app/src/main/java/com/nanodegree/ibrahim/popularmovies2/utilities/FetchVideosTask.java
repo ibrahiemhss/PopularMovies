@@ -22,6 +22,7 @@ public class FetchVideosTask extends AsyncTaskLoader< ArrayList<Videos>> {
     private final AsyncTaskCompleteListener<ArrayList<Videos>> listener;
     private final String selction;
     private final String id;
+    @SuppressWarnings("unused")
     private ArrayList<Videos> videos;
 
     public FetchVideosTask(@NonNull Context context, AsyncTaskCompleteListener<ArrayList<Videos>> listener, String id) {

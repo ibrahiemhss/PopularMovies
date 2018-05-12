@@ -48,13 +48,16 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     private static final int MOVIE_LOADER_ID = 2;
     private LoaderCallbacks<ArrayList<Movies>> callback;
     private boolean isFavorite;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /*make sure if  savedInstanceState not null after rotate or exit the application
          * snd it have the key that come from onSaveInstanceState with Bundle
          * */
-
+        callback = MainActivity.this;
+        OnItemClickListener listener = this;
+        moviesArrayList = new ArrayList<>();
         if (savedInstanceState != null && savedInstanceState.containsKey(STATE_MOVIES)) {
             //after check get the value of that key in  moviesArrayList
             moviesArrayList = savedInstanceState.getParcelableArrayList(STATE_MOVIES);
@@ -64,11 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         /*set default value to favorite to false to not get the favorite when openinig activity*/
         isFavorite=false;
 
-        callback = MainActivity.this;
 
-        OnItemClickListener listener = this;
-
-        moviesArrayList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.recyclerview_movies);
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         /*
@@ -143,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
          * callback. In our case, we don't actually use the Bundle, but it's here in case we wanted
          * to.
          */
-        Bundle bundleForLoader = null;
            /*
          * Ensures a loader is initialized and active. If the loader doesn't already exist, one is
          * created and (if the activity/fragment is currently started) starts the loader. Otherwise
@@ -162,7 +160,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         outState.putParcelableArrayList(STATE_MOVIES, moviesArrayList);
         super.onSaveInstanceState(outState);
     }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList(STATE_MOVIES, moviesArrayList);
+        super.onRestoreInstanceState(savedInstanceState);
 
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -197,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 isFavorite=true;
                 //restart loader to get new value of favorites
                 getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -244,38 +248,47 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Then, show the error */
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+        mErrorMessageDisplay.setText(getResources().getString(R.string.error_message));
         mRefresh.setVisibility(View.VISIBLE);
 
     }
 
-    @Override
-    public void onItemClick() {
 
-    }
-
+      /** @param loaderId The loader ID for which we need to create a loader
+         * @param bundle   Any arguments supplied by the caller
+        * @return A new Loader instance that is ready to start loading.
+            */
     @   NonNull
     @Override
-    public Loader<ArrayList<Movies>> onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<ArrayList<Movies>> onCreateLoader(int loaderId, @Nullable Bundle bundle) {
+        switch (loaderId) {
 
-/*if statement here to change source of data from internet or from sqlite as favorites*/
-         if(isFavorite) {
-/*return data from FetchMovieFromSqlite class*/
-             return new FetchMovieFromSqlite(this, new AsyncTaskCompleteListener<ArrayList<Movies>>() {
-                 @Override
-                 public void onTaskComplete(ArrayList<Movies> result) {
+            case MOVIE_LOADER_ID:
+           /*if statement here to change source of data from internet or from sqlite as favorites*/
+                if (isFavorite) {
+          /*return data from FetchMovieFromSqlite class*/
+                    return new FetchMovieFromSqlite(this, new AsyncTaskCompleteListener<ArrayList<Movies>>() {
+                        @Override
+                        public void onTaskComplete(ArrayList<Movies> result) {
+                            // method that show  text message "no  favorites added "
+                            isImpty(result);
 
-                 }
-             });
+                        }
+                    });
 
-         }else {
-/*any thing not true  data will returned  from FetchMoviesTaskLoader class*/
+                } else {
+         /*any thing not true  data will returned  from FetchMoviesTaskLoader class*/
 
-            return new FetchMoviesTaskLoader(this,new AsyncTaskCompleteListener<ArrayList<Movies>>() {
-                @Override
-                public void onTaskComplete(ArrayList<Movies> result) {
+                    return new FetchMoviesTaskLoader(this, new AsyncTaskCompleteListener<ArrayList<Movies>>() {
+                        @Override
+                        public void onTaskComplete(ArrayList<Movies> result) {
 
+                        }
+                    });
                 }
-            });
+
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
         }
 
     }
@@ -317,5 +330,19 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         mAdapter.updateMovies(null);
     }
 
+    /**
+     * This method is used when we get empty data from sqlite has no favorite added
+     *   @param movies   will come from loader
+     */
+    private void isImpty(ArrayList<Movies> movies){
+        if(movies.size()==0){
+            mErrorMessageDisplay.setVisibility(View.VISIBLE);
+            mErrorMessageDisplay.setText(getResources().getString(R.string.no_favorites));
+        }
+    }
 
+    @Override
+    public void onItemClick() {
+
+    }
 }

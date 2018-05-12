@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,8 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_title"
@@ -22,6 +20,7 @@
             android:textColor="@color/colorBlack"
             android:textSize="18sp"
             android:textStyle="bold" />
+
         <TextView
             android:id="@+id/tv_id"
             android:layout_width="wrap_content"
@@ -40,8 +39,7 @@
             android:contentDescription="TODO"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_image_blank"
-            app:layout_collapseMode="parallax"
-            app:layout_collapseParallaxMultiplier="0.7"
+
             tools:ignore="ContentDescription,HardcodedText" />
 
         <LinearLayout
@@ -69,38 +67,41 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_txt_favorite"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:padding="5dp"
-                android:text="@string/add_favorite"
+                android:textAlignment="textEnd"
                 android:textColor="@color/colorBlack"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="RtlCompat" />
 
             <ImageView
                 android:id="@+id/tv_favorite"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
                 android:layout_weight="1"
+                android:contentDescription="TODO"
                 android:padding="5dp"
                 android:src="@drawable/ic_favorite_gray"
-                android:contentDescription="TODO"
                 tools:ignore="ContentDescription,HardcodedText" />
         </LinearLayout>
 
         <RatingBar
             android:id="@+id/ratingBar"
+            style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            style="?android:attr/ratingBarStyleSmall"
             android:max="10"
             android:stepSize="0.1" />
 
@@ -118,46 +119,52 @@
             android:id="@+id/tv_overview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/text_margin"
             android:layout_marginLeft="@dimen/text_margin"
             android:layout_marginRight="@dimen/text_margin"
             android:textColor="@color/colorGray"
-            android:layout_marginBottom="5dp"
             android:textStyle="normal" />
-<View
-    android:layout_width="match_parent"
-    android:layout_height="2dp"
-    android:background="@color/colorBlack"
-    />
-        <RelativeLayout
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btn_move_back"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_alignParentStart="true"
-                android:background="@drawable/ic_arrow_back"
-                android:layout_alignParentLeft="true" />
-            <Button
-                android:id="@+id/btn_move_forward"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/ic_arrow_forward"
-                android:layout_alignParentRight="true" />
-        </RelativeLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_vedioes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="center" />
+            android:layout_height="1dp"
+            android:background="@drawable/gradient_line" />
+
         <ProgressBar
             android:id="@+id/pb_loading_videos"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_gravity="center"
             android:visibility="invisible" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/details_margin">
+
+            <Button
+                android:id="@+id/btn_move_back"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/ic_arrow_back" />
+
+            <Button
+                android:id="@+id/btn_move_forward"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_arrow_forward" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_vedioes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp" />
 
     </LinearLayout>
 </ScrollView>

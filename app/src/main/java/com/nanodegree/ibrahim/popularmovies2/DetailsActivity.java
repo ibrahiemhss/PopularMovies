@@ -59,13 +59,18 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
     private ProgressBar mLoadingIndicator;
     private LinearLayoutManager layoutManager;
     private String extra_id;
-    private static final int MOVIE_LOADER_ID = 0;
+    private static final String STATE_VIDEOS = "state_videos";
+    private static final int VIDEO_LOADER_ID = 0;
     private ImageView mAddFovorite;
-
+    private TextView mTextfavorite;
     @SuppressLint("PrivateResource")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_VIDEOS)) {
+            //after check get the value of that key in  moviesArrayList
+            videosArrayList = savedInstanceState.getParcelableArrayList(STATE_VIDEOS);
+        }
         setContentView(R.layout.activity_details);
         final MovieHelper mMovieHelper = new MovieHelper(this);
         ImageView mImag_poster = findViewById(R.id.tv_movie_poster);
@@ -73,6 +78,7 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
         TextView mOverview = findViewById(R.id.tv_overview);
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         TextView mTxtTitle = findViewById(R.id.tv_title);
+        mTextfavorite=findViewById(R.id.tv_txt_favorite);
         //       TextView        id = findViewById(R.id.tv_id);
         setRecyclerView();
         mLoadingIndicator = findViewById(R.id.pb_loading_videos);
@@ -145,12 +151,15 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
         * check if id inside table favorites to change color of favorite icon*/
         if (mMovieHelper.verification(extra_id)) {
             mAddFovorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
+           mTextfavorite.setText(getResources().getString(R.string.remove_favorite));
+        }else {
+            mTextfavorite.setText(getResources().getString(R.string.add_favorite));
 
         }
         mAddFovorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Insert new movies data via a ContentResolver
+                // if ==>id not found return false will Insert new movies data via a ContentResolver
                 if (!mMovieHelper.verification(extra_id)) {
                     ContentValues contentValues = new ContentValues();
                     // Put the  ==>id     into ContentValues
@@ -168,12 +177,14 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
                     /* get the ContentProvider URI (movies) and Insert contentValues via a ContentResolver inside table movies*/
                     Uri uri = getContentResolver().insert(Contract.MoviesEntry.CONTENT_URI, contentValues);
                     if (uri != null) {
-                        Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), getResources().getString(R.string.success_added), Toast.LENGTH_LONG).show();
                     }
                     mAddFovorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
+                    mTextfavorite.setText(getResources().getString(R.string.remove_favorite));
 
                 }
-                if (!mMovieHelper.verification(extra_id)) {
+                //but if ==> id found return true the second click will remove this column with this id
+                else if (mMovieHelper.verification(extra_id)) {
 
                     Uri uri = Contract.MoviesEntry.CONTENT_URI;
                     if (uri != null) {
@@ -182,9 +193,10 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
                     assert uri != null;
                     uri = uri.buildUpon().appendPath(extra_id).build();
 
-                    // COMPLETED (2) Delete a single row of data using a ContentResolver
+                    // Delete a single row of data using a ContentResolver
                     getContentResolver().delete(uri, null, null);
                     mAddFovorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_gray));
+                    mTextfavorite.setText(getResources().getString(R.string.add_favorite));
 
                 }
 
@@ -194,8 +206,15 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
 
         loadVideosData();
     }
-
-
+    /**
+     * Override method to put videosArrayList and
+     * key  STATE_VIDEOS inside Bundle by ParcelableArrayList
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(STATE_VIDEOS, videosArrayList);
+        super.onSaveInstanceState(outState);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -264,8 +283,7 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
     private void loadVideosData() {
         showMoviesDataView();
         LoaderCallbacks<ArrayList<Videos>> callback = DetailsActivity.this;
-        Bundle bundleForLoader = null;
-        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, callback);
+        getSupportLoaderManager().initLoader(VIDEO_LOADER_ID, null, callback);
 
     }
 
@@ -277,11 +295,23 @@ public class DetailsActivity extends AppCompatActivity implements OnItemClickLis
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
+    /** @param loaderId The loader ID for which we need to create a loader
+     * @param bundle   Any arguments supplied by the caller
+     * @return A new Loader instance that is ready to start loading.
+     */
     @NonNull
     @Override
-    public Loader<ArrayList<Videos>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new FetchVideosTask(this, new FetchMyDataTaskCompleteListener(),
-                extra_id);
+    public Loader<ArrayList<Videos>> onCreateLoader(int loaderId, @Nullable Bundle bundle) {
+        switch (loaderId) {
+
+            case VIDEO_LOADER_ID:
+
+                return new FetchVideosTask(this, new FetchMyDataTaskCompleteListener(),
+                        extra_id);
+
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
+        }
     }
 
     @Override

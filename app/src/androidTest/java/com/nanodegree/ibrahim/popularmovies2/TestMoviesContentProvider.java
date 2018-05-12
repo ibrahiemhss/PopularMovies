@@ -148,7 +148,6 @@ public class TestMoviesContentProvider {
         /* Create values to insert */
         ContentValues testMoviesValues = new ContentValues();
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_OVERVIEW, "Test overview");
-        testMoviesValues.put( Contract.MoviesEntry.COLUMN_FAORITE, 1);
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_MOVIES_ID, 1);
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_POSTER_PATH, "movie path");
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_RELEASE_DATE, "14:5:1900");
@@ -212,7 +211,6 @@ public class TestMoviesContentProvider {
 
         ContentValues testMoviesValues = new ContentValues();
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_OVERVIEW, "Test overview");
-        testMoviesValues.put( Contract.MoviesEntry.COLUMN_FAORITE, 1);
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_MOVIES_ID, 1);
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_POSTER_PATH, "movie path");
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_RELEASE_DATE, "14:5:1900");
@@ -271,7 +269,6 @@ public class TestMoviesContentProvider {
         /* Create a new row of task data */
         ContentValues testMoviesValues = new ContentValues();
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_OVERVIEW, "Test overview");
-        testMoviesValues.put( Contract.MoviesEntry.COLUMN_FAORITE, 1);
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_MOVIES_ID, 1);
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_POSTER_PATH, "movie path");
         testMoviesValues.put( Contract.MoviesEntry.COLUMN_RELEASE_DATE, "14:5:1900");

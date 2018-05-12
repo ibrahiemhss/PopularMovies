@@ -2,7 +2,6 @@ package com.nanodegree.ibrahim.popularmovies2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -41,7 +40,6 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.W500;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
     private final Context context;
     /*get Movies Class as object inside list to set and get all data from it */
-    private Cursor mCursor;
     private ArrayList<Movies> listMovie;
     private final OnItemClickListener listener;
 

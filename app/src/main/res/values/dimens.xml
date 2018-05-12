@@ -2,4 +2,6 @@
     <dimen name="app_bar_height" tools:keep="@dimen/app_bar_height">180dp</dimen>
     <dimen name="fab_margin" tools:keep="@dimen/fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="details_margin">5dp</dimen>
+
 </resources>

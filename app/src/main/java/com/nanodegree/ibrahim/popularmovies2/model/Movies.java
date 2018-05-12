@@ -37,44 +37,20 @@ public class Movies implements Parcelable {
         this.favorite = false;
     }
 
-    public static String getTAG() {
-        return TAG;
-    }
-
-    public boolean isVideo() {
-        return video;
-    }
-
     public void setVideo(boolean video) {
         this.video = video;
-    }
-
-    public long getPopularity() {
-        return popularity;
     }
 
     public void setPopularity(long popularity) {
         this.popularity = popularity;
     }
 
-    public String getOriginal_language() {
-        return original_language;
-    }
-
     public void setOriginal_language(String original_language) {
         this.original_language = original_language;
     }
 
-    public String getOriginal_title() {
-        return original_title;
-    }
-
     public void setOriginal_title(String original_title) {
         this.original_title = original_title;
-    }
-
-    public ArrayList<String> getGenre_ids() {
-        return genre_ids;
     }
 
     public void setGenre_ids(ArrayList<String> genre_ids) {
@@ -89,22 +65,15 @@ public class Movies implements Parcelable {
         this.id = id;
     }
 
-    public String getBackdrop_path() {
-        return backdrop_path;
-    }
-
     public void setBackdrop_path(String backdrop_path) {
         this.backdrop_path = backdrop_path;
-    }
-
-    public boolean isAdult() {
-        return adult;
     }
 
     public void setAdult(boolean adult) {
         this.adult = adult;
     }
 
+    @SuppressWarnings("unused")
     public static Creator<Movies> getCREATOR() {
         return CREATOR;
     }

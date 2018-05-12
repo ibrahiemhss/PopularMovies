@@ -26,7 +26,8 @@
         <activity
             android:name="com.nanodegree.ibrahim.popularmovies2.DetailsActivity"
             android:parentActivityName="com.nanodegree.ibrahim.popularmovies2.MainActivity"
-            tools:targetApi="jelly_bean">
+            android:configChanges="orientation|screenSize|keyboard"
+           tools:targetApi="jelly_bean">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

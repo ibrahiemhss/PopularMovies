@@ -1,14 +1,17 @@
-<resources>
-    <string name="app_name">PopularMovies Stage1</string>
-    <string name="error_message">An error has occurred. Please try again by click on refresh </string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">PopularMovies</string>
+    <string name="error_message">An error has occurred. Please try again  click to refresh </string>
+    <string name="no_favorites">You have not added any movies to your favorites yet :)</string>
+    <string name="success_added">Your favorite movie has been successfully added</string>
     <string name="todo">TODO</string>
     <string name="overview">Overview</string>
     <string name="release_date">Release date :</string>
     <string name="sort_py">sort py</string>
     <string name="top_rated">top rated</string>
     <string name="popular">popular</string>
-    <string name="refresh">Refresh</string>
+    <string name="refresh" tools:keep="@string/refresh">Refresh</string>
     <string name="check_intenet">please check internet conncetion</string>
-    <string name="add_favorite">add to favorite</string>
+    <string name="add_favorite">add to favorites </string>
+    <string name="remove_favorite">remove from favorites</string>
     <string name="favorites">favorites</string>
 </resources>
