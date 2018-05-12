@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 if (!isConnected || !isWiFi) {
                     Toast.makeText(MainActivity.this, getResources().getString(R.string.check_intenet), Toast.LENGTH_LONG).show();
                 } else {
-                    loadMoviesData();
+                    getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null,MainActivity. this);
 
                 }
 
@@ -135,23 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
          * This ID will uniquely identify the Loader. We can use it,to get a handle
          * on our Loader at a later point in time through the support LoaderManager.
          */
-        /*
-         * From MainActivity, we have implemented the LoaderCallbacks interface with the type of
-         * String array. (implements  LoaderCallbacks<ArrayList<Movies>>) The variable callback is passed
-         * to the call to initLoader below. This means that whenever the loaderManager has
-         * something to notify us of, it will do so through this callback.
-         */
-          /*
-         * The second parameter of the initLoader method below is a Bundle. Optionally, you can
-         * pass a Bundle to initLoader that you can then access from within the onCreateLoader
-         * callback. In our case, we don't actually use the Bundle, but it's here in case we wanted
-         * to.
-         */
-           /*
-         * Ensures a loader is initialized and active. If the loader doesn't already exist, one is
-         * created and (if the activity/fragment is currently started) starts the loader. Otherwise
-         * the last created loader is re-used.
-         */
+
         getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, callback);
 
     }
