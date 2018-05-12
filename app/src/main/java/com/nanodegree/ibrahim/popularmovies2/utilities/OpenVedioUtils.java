@@ -24,9 +24,7 @@ class OpenVedioUtils {
 
         /* information. Each Videos info is an element of the "results" array */
         final String RESULTS = "results";
-
-
-                       /*all  childrens  objects in "results" array */
+       /*all  childrens  objects in "results" array */
         final String KEY = "key";
         final String NAME = "name";
         final String SITE = "site";
@@ -49,17 +47,17 @@ class OpenVedioUtils {
             String size;
             String type;
 
-                       /* Get the JSON object representing the results */
+           /* Get the JSON object representing the results */
             JSONObject objResult = VideosArrayResults.getJSONObject(i);
-                        /* Get the JSON object representing the -->...key... from--> JSONObject(results)*/
+           /* Get the JSON object representing the -->...key... from--> JSONObject(results)*/
             key = objResult.optString(KEY);
-                        /* Get the JSON object representing the -->...name... from -->JSONObject(results)*/
+            /* Get the JSON object representing the -->...name... from -->JSONObject(results)*/
             name = objResult.optString(NAME);
-                        /* Get the JSON object representing the--> ....site.... from--> JSONObject(results)*/
+            /* Get the JSON object representing the--> ....site.... from--> JSONObject(results)*/
             site = objResult.optString(SITE);
-                       /* Get the JSON object representing the -->....size.... from--> JSONObject(results)*/
+            /* Get the JSON object representing the -->....size.... from--> JSONObject(results)*/
             size = objResult.optString(SIZE);
-                        /* Get the JSON object representing the -->....type.... from--> JSONObject(results)*/
+             /* Get the JSON object representing the -->....type.... from--> JSONObject(results)*/
             type = objResult.optString(TYPE);
 
             videos.setKey(key);

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,7 +28,6 @@ import com.nanodegree.ibrahim.popularmovies2.interfaces.OnItemClickListener;
 import com.nanodegree.ibrahim.popularmovies2.model.Movies;
 import com.nanodegree.ibrahim.popularmovies2.utilities.FetchMovieFromSqlite;
 import com.nanodegree.ibrahim.popularmovies2.utilities.FetchMoviesTaskLoader;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
 import java.util.ArrayList;
 
@@ -35,17 +35,22 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.POPULAR_PART;
 import static com.nanodegree.ibrahim.popularmovies2.data.Contract.TOP_RATED_PART;
 
 
-public class MainActivity extends AppCompatActivity implements OnItemClickListener , LoaderManager.LoaderCallbacks<ArrayList<Movies>> {
+/**
+ *
+ * Created by ibrahim on 06/05/18.
+ */
+
+public class MainActivity extends AppCompatActivity implements OnItemClickListener, LoaderManager.LoaderCallbacks<ArrayList<Movies>> {
     private static final String TAG = "Movies";
     private static final String STATE_MOVIES = "state_movies";
+    private static final int MOVIE_LOADER_ID = 2;
     private RecyclerView mRecyclerView;
-   private TextView mErrorMessageDisplay;
+    private TextView mErrorMessageDisplay;
     private Button mRefresh;
     private ProgressBar mLoadingIndicator;
     private ArrayList<Movies> moviesArrayList;
     private MoviesAdapter mAdapter;
     private Menu menu;
-    private static final int MOVIE_LOADER_ID = 2;
     private LoaderCallbacks<ArrayList<Movies>> callback;
     private boolean isFavorite;
 
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         setContentView(R.layout.activity_main);
 
         /*set default value to favorite to false to not get the favorite when openinig activity*/
-        isFavorite=false;
+        isFavorite = false;
 
 
         mRecyclerView = findViewById(R.id.recyclerview_movies);
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             public void onClick(View view) {
                 mAdapter.updateMovies(null);
                 ConnectivityManager cm =
-                        (ConnectivityManager)MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                        (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
                 assert cm != null;
                 NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -107,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                         activeNetwork.isConnectedOrConnecting();
                 assert activeNetwork != null;
                 boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
-                if(!isConnected || !isWiFi){
-                    Toast.makeText(MainActivity.this, getResources().getString(R.string.check_intenet),Toast.LENGTH_LONG).show();
-                }else {
+                if (!isConnected || !isWiFi) {
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.check_intenet), Toast.LENGTH_LONG).show();
+                } else {
                     loadMoviesData();
 
                 }
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             }
         });
         /* Once all of our views are setup, we can load the movies data. */
-     loadMoviesData();
+        loadMoviesData();
 
 
     }
@@ -160,18 +165,20 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         outState.putParcelableArrayList(STATE_MOVIES, moviesArrayList);
         super.onSaveInstanceState(outState);
     }
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(STATE_MOVIES, moviesArrayList);
         super.onRestoreInstanceState(savedInstanceState);
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.menu_last:
-                isFavorite=false;
+                isFavorite = false;
                 //change title of menu  that show in  toolbar by sellected itme text
                 setMenuName(TOP_RATED_PART);
                 invalidateData();
@@ -185,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 invalidateData();
                 //change title of menu  that show in  toolbar by sellected itme text
                 setMenuName(POPULAR_PART);
-                isFavorite=false;
+                isFavorite = false;
 
                 //save String==> popular   so will change the URL and therefore bring the json based on ==>popular
                 SharedPrefManager.getInstance(MainActivity.this).setPrefUrlSellected(POPULAR_PART);
@@ -197,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 //change title of menu  that show in  toolbar by sellected itme text
                 setMenuName(getResources().getString(R.string.favorites));
                 /*set value of isFavorite to make loader  read date from FetchMovieFromSqlite class*/
-                isFavorite=true;
+                isFavorite = true;
                 //restart loader to get new value of favorites
                 getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
 
@@ -254,11 +261,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     }
 
 
-      /** @param loaderId The loader ID for which we need to create a loader
-         * @param bundle   Any arguments supplied by the caller
-        * @return A new Loader instance that is ready to start loading.
-            */
-    @   NonNull
+    /**
+     * @param loaderId The loader ID for which we need to create a loader
+     * @param bundle   Any arguments supplied by the caller
+     * @return A new Loader instance that is ready to start loading.
+     */
+    @NonNull
     @Override
     public Loader<ArrayList<Movies>> onCreateLoader(int loaderId, @Nullable Bundle bundle) {
         switch (loaderId) {
@@ -304,14 +312,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 /*set the the of our moviesArrayList from the value that com from asyncTask ( onPostExecute  parameter
                  * to save it inside onSaveInstanceState
                  * */
-            moviesArrayList=result;
+            moviesArrayList = result;
                 /*ubdate the value of mAdapter by sending the value of arraylist inside it* */
             mAdapter.updateMovies(moviesArrayList);
 
 
             mAdapter.notifyDataSetChanged();
-        }
-        else {
+        } else {
             showErrorMessage();
         }
 
@@ -322,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
 
     }
+
     /**
      * This method is used when we are resetting data, so that at one point in time during a
      * refresh of our data, you can see that there is no data showing.
@@ -332,10 +340,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     /**
      * This method is used when we get empty data from sqlite has no favorite added
-     *   @param movies   will come from loader
+     *
+     * @param movies will come from loader
      */
-    private void isImpty(ArrayList<Movies> movies){
-        if(movies.size()==0){
+    private void isImpty(ArrayList<Movies> movies) {
+        if (movies.size() == 0) {
             mErrorMessageDisplay.setVisibility(View.VISIBLE);
             mErrorMessageDisplay.setText(getResources().getString(R.string.no_favorites));
         }

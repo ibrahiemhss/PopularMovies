@@ -27,12 +27,11 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.EXTRA_WEBVIEW_
  */
 
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdapterViewHolder> {
-    private final Context context;
-    /*get Movies Class as object inside list to set and get all data from it */
-
-    private ArrayList<Videos> listVideos;
-    private final OnItemClickListener listener;
     private static final String TAG = "VideosAdapter";
+    /*get Movies Class as object inside list to set and get all data from it */
+    private final Context context;
+    private final OnItemClickListener listener;
+    private ArrayList<Videos> listVideos;
 
     public VideosAdapter(DetailsActivity context, ArrayList<Videos> videos, OnItemClickListener listener) {
         this.listVideos = videos;
@@ -96,9 +95,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdap
         @SuppressLint("SetJavaScriptEnabled")
         public void bind(final Videos item, final OnItemClickListener listener) {
 
-            final String yotubeUrl ="https://www.youtube.com/watch?v="+item.getKey();
+            final String yotubeUrl = "https://www.youtube.com/watch?v=" + item.getKey();
             mMvideosTypeTextView.setText(item.getType());
-            Log.v(TAG,"yotubeUrl="+yotubeUrl);
+            Log.v(TAG, "yotubeUrl=" + yotubeUrl);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -107,7 +106,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VediosAdap
                     // probably set ImageView.scaleType to `fitXY` so it stretches
         /*set on click for image view with intent PutExtra data from current position*/
                     Intent intent = new Intent(context, WebViewActivity.class);
-                    intent.putExtra(EXTRA_WEBVIEW_URL,yotubeUrl);
+                    intent.putExtra(EXTRA_WEBVIEW_URL, yotubeUrl);
                     context.startActivity(intent);
 
 

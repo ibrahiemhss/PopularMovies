@@ -3,7 +3,6 @@ package com.nanodegree.ibrahim.popularmovies2.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-
 import java.util.ArrayList;
 
 /**
@@ -14,6 +13,26 @@ import java.util.ArrayList;
 public class Movies implements Parcelable {
 
     private static final String TAG = "Movies";
+    /*After implementing the `Parcelable` interface, we need to create the
+    `Parcelable.Creator<Movies> CREATOR` constant for our class;
+     Notice how it has our class specified as its type.*/
+    private static final Creator<Movies> CREATOR = new Creator<Movies>() {
+
+
+        /* This simply calls our new constructor (typically private) and
+        * passes along the  `Parcel`, and then returns the new object!*/
+        @Override
+        public Movies createFromParcel(Parcel in) {
+            Log.v(TAG, "createbeParcelaple");
+
+            return new Movies(in);
+        }
+
+        @Override
+        public Movies[] newArray(int size) {
+            return new Movies[size];
+        }
+    };
     private boolean video;
     private long votAverage;
     private String tilte;
@@ -28,6 +47,33 @@ public class Movies implements Parcelable {
     private String overview;
     private String release_date;
     private boolean favorite;
+
+    public Movies() {
+    }
+
+    /* Using the `in` variable, we can retrieve the values that
+     we originally wrote into the `Parcel`.  This constructor is usually
+     private so that only the `CREATOR` field can access.*/
+    private Movies(Parcel in) {
+        video = in.readByte() != 0;
+        votAverage = in.readLong();
+        tilte = in.readString();
+        popularity = in.readLong();
+        poster_path = in.readString();
+        original_language = in.readString();
+        original_title = in.readString();
+        genre_ids = in.createStringArrayList();
+        id = in.readLong();
+        backdrop_path = in.readString();
+        adult = in.readByte() != 0;
+        overview = in.readString();
+        release_date = in.readString();
+    }
+
+    @SuppressWarnings("unused")
+    public static Creator<Movies> getCREATOR() {
+        return CREATOR;
+    }
 
     public boolean isFavorite() {
         return favorite;
@@ -71,55 +117,6 @@ public class Movies implements Parcelable {
 
     public void setAdult(boolean adult) {
         this.adult = adult;
-    }
-
-    @SuppressWarnings("unused")
-    public static Creator<Movies> getCREATOR() {
-        return CREATOR;
-    }
-
-
-    /*After implementing the `Parcelable` interface, we need to create the
-    `Parcelable.Creator<Movies> CREATOR` constant for our class;
-     Notice how it has our class specified as its type.*/
-    private static final Creator<Movies> CREATOR = new Creator<Movies>() {
-
-
-        /* This simply calls our new constructor (typically private) and
-        * passes along the  `Parcel`, and then returns the new object!*/
-        @Override
-        public Movies createFromParcel(Parcel in) {
-            Log.v(TAG, "createbeParcelaple");
-
-            return new Movies(in);
-        }
-
-        @Override
-        public Movies[] newArray(int size) {
-            return new Movies[size];
-        }
-    };
-
-    public Movies() {
-    }
-
-    /* Using the `in` variable, we can retrieve the values that
-     we originally wrote into the `Parcel`.  This constructor is usually
-     private so that only the `CREATOR` field can access.*/
-    private Movies(Parcel in) {
-        video = in.readByte() != 0;
-        votAverage = in.readLong();
-        tilte = in.readString();
-        popularity = in.readLong();
-        poster_path = in.readString();
-        original_language = in.readString();
-        original_title = in.readString();
-        genre_ids = in.createStringArrayList();
-        id = in.readLong();
-        backdrop_path = in.readString();
-        adult = in.readByte() != 0;
-        overview = in.readString();
-        release_date = in.readString();
     }
 
 // --Commented out by Inspection START (03/05/18 01:40 ص):

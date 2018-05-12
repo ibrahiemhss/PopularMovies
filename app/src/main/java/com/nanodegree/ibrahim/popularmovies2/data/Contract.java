@@ -9,20 +9,13 @@ import com.nanodegree.ibrahim.popularmovies2.BuildConfig;
 /**
  *
  * Created by ibrahim on 01/05/18.
- *
  */
 
 public class Contract {
-    private static final String KEY = "?api_key=";
-
-
-    //TODO put your own Api key
-    public static final String API_KEY = KEY+ BuildConfig.API_KEY;
     public static final String BAS_URL = "https://api.themoviedb.org/3/movie/";
     public static final String POPULAR_PART = "popular";
     public static final String TOP_RATED_PART = "top_rated ";
     public static final String VIDEOS = "videos ";
-
     //keyes of intent
     public static final String EXTRA_TITLE = "extra_title ";
     public static final String EXTRA_URL = "extra_url ";
@@ -33,12 +26,15 @@ public class Contract {
     public static final String EXTRA_WEBVIEW_URL = "web_view_url ";
     public static final String EXTRA_FAVORITE = "extra_favorite";
     public static final String EXTRA_POSTER_PATH = "extra_poster_path";
-
     //the url of value of image view
     public static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
     public static final String W185 = "w185";
     public static final String W500 = "w500";
-
+    // The authority, which is how our code knows which Content Provider to access
+    public static final String AUTHORITY = "com.nanodegree.ibrahim.popularmovies2";
+    // Define the possible paths for accessing data in this contract
+    // This is the path for the "tasks" directory
+    public static final String PATH_MOVIES = "movies";
 
 
     /* Content provider constants to the Contract
@@ -49,16 +45,11 @@ public class Contract {
         3) Path(s) to the movies directory
         4) Content URI for data in the MoviesEntry class
       */
-
-    // The authority, which is how our code knows which Content Provider to access
-    public static final String AUTHORITY = "com.nanodegree.ibrahim.popularmovies2";
-
+    private static final String KEY = "?api_key=";
+    //TODO put your own Api key
+    public static final String API_KEY = KEY + BuildConfig.API_KEY;
     // The base content URI = "content://" + <authority>
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
-
-    // Define the possible paths for accessing data in this contract
-    // This is the path for the "tasks" directory
-    public static final String PATH_MOVIES = "movies";
 
     /* Inner class that defines the table contents of the Movies table */
     public static final class MoviesEntry implements BaseColumns {
@@ -68,13 +59,13 @@ public class Contract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
 
         /* Used internally as the name of our Movies table. */
-            public static final String TABLE_NAME = "movies";
-            public static final String COLUMN_MOVIES_ID = "movies_id";
-            public static final String COLUMN_TITLE = "title";
-            public static final String COLUMN_VOTE_AVERAGE = "vote_average";
-            public static final String COLUMN_POSTER_PATH = "poster_path";
-            public static final String COLUMN_OVERVIEW = "overview";
-            public static final String COLUMN_RELEASE_DATE = "release_date";
+        public static final String TABLE_NAME = "movies";
+        public static final String COLUMN_MOVIES_ID = "movies_id";
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_VOTE_AVERAGE = "vote_average";
+        public static final String COLUMN_POSTER_PATH = "poster_path";
+        public static final String COLUMN_OVERVIEW = "overview";
+        public static final String COLUMN_RELEASE_DATE = "release_date";
 /*
         The above table structure looks something like the sample table below.
         With the name of the table and columns on top, and potential contents in rows

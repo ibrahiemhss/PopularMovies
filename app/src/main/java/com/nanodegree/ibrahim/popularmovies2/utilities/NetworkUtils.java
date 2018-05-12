@@ -84,13 +84,13 @@ final class NetworkUtils {
         }
     }
 
-    public static URL buildVideoUr(String selected,String id) {
+    public static URL buildVideoUr(String selected, String id) {
         Uri builtUri;
         /*String selected  in first time will come empty so we
         must check if it will be null i make default value of String selected
         just the url will come full not divided*/
 
-        builtUri = Uri.parse(parsVideoUrl(selected,id)).buildUpon()
+        builtUri = Uri.parse(parsVideoUrl(selected, id)).buildUpon()
                 .build();
 
 
@@ -106,12 +106,14 @@ final class NetworkUtils {
 
         return url;
     }
-    private static String parsVideoUrl(String ved, String id){
+
+    private static String parsVideoUrl(String ved, String id) {
         String getUrl = null;
         if (ved != null) {
-            getUrl = BAS_URL+id.trim()+"/"+ved.trim()+API_KEY;
+            getUrl = BAS_URL + id.trim() + "/" + ved.trim() + API_KEY;
             //    https://api.themoviedb.org/3/movie/337167/videos?api_key=fa22ceab3172625817f5b2523e53ecd2
-        }        return getUrl;
+        }
+        return getUrl;
 
     }
 }

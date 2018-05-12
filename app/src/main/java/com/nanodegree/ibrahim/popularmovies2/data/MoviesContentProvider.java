@@ -26,6 +26,8 @@ public class MoviesContentProvider extends ContentProvider {
     public static final int MOVIES_WITH_ID = 101;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
+    // Member variable for a MovieHelper that's initialized in the onCreate() method
+    private MovieHelper mMovieHelper;
 
     /**
      * Initialize a new matcher object without any matches,
@@ -46,9 +48,6 @@ public class MoviesContentProvider extends ContentProvider {
 
         return uriMatcher;
     }
-
-    // Member variable for a MovieHelper that's initialized in the onCreate() method
-    private MovieHelper mMovieHelper;
 
     @Override
     public boolean onCreate() {

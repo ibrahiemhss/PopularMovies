@@ -30,7 +30,7 @@ class OpenMoviesUtils {
 
 
                        /*all  childrens  objects in "results" array */
-       final String ID = "id";
+        final String ID = "id";
         final String VIDEO = "video";
         final String VOTE_AVERAGE = "vote_average";
         final String TITLE = "title";
@@ -53,7 +53,7 @@ class OpenMoviesUtils {
             /* These are the values that will be collected */
 
             movies = new Movies();
-              long id;
+            long id;
             boolean isVideo;
             long voteAverage;
             String title;
@@ -71,7 +71,7 @@ class OpenMoviesUtils {
                        /* Get the JSON object representing the results */
             JSONObject objResult = moviesArrayResults.getJSONObject(i);
                         /* Get the JSON object representing the -->...vote_count... from--> JSONObject(results)*/
-             id = objResult.getLong(ID);
+            id = objResult.getLong(ID);
                                         /* Get the JSON object representing the -->...video ... from--> JSONObject(results)*/
             isVideo = objResult.getBoolean(VIDEO);
                         /* Get the JSON object representing the--> ...vote_average... from -->JSONObject(results)*/
@@ -125,7 +125,7 @@ class OpenMoviesUtils {
             movies.setRelease_date(releasDate);
             movies.setFavorite();
 
-            Log.i(TAG, "FetchMovies\ntitle\n"+title+"\nposter:"+posterPath+"\noverview:"+overview+"\ndate:"+releasDate+"\noverage:"+voteAverage);
+            Log.i(TAG, "FetchMovies\ntitle\n" + title + "\nposter:" + posterPath + "\noverview:" + overview + "\ndate:" + releasDate + "\noverage:" + voteAverage);
 
             moviesArrayList.add(movies);
 

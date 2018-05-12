@@ -44,8 +44,10 @@ public class MovieHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
-/** @param id The String will come from DetailsActivity
-*/
+
+    /**
+     * @param id The String will come from DetailsActivity
+     */
     public boolean verification(String id) throws SQLException {
         int count = -1;
         Cursor c = null;

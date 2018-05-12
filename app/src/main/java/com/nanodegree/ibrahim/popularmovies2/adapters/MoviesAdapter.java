@@ -39,9 +39,9 @@ import static com.nanodegree.ibrahim.popularmovies2.data.Contract.W500;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
     private final Context context;
+    private final OnItemClickListener listener;
     /*get Movies Class as object inside list to set and get all data from it */
     private ArrayList<Movies> listMovie;
-    private final OnItemClickListener listener;
 
     public MoviesAdapter(MainActivity context, ArrayList<Movies> movies, OnItemClickListener listener) {
         this.listMovie = movies;
@@ -124,13 +124,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
                 public void onClick(View v) {
                     listener.onItemClick();
 
-        // probably set ImageView.scaleType to `fitXY` so it stretches
+                    // probably set ImageView.scaleType to `fitXY` so it stretches
          /*set on click for image view with intent PutExtra data from current position*/
 
                     Intent intent = new Intent(context, DetailsActivity.class);
                     Bundle extras = new Bundle();
                     extras.putString(EXTRA_TITLE, item.getTilte());
-                  //  extras.putString(EXTRA_URL, title);
+                    //  extras.putString(EXTRA_URL, title);
                     extras.putString(EXTRA_POSTER_PATH, item.getPoster_path());
                     extras.putString(EXTRA_ID, String.valueOf(item.getId()));
                     extras.putString(EXTRA_YEAR, String.valueOf(item.getRelease_date()));

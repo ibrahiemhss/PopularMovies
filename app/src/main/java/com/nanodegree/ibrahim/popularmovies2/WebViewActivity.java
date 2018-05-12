@@ -28,12 +28,11 @@ public class WebViewActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_web_view);
         Bundle bundle = getIntent().getExtras();
-WebView webView=findViewById(R.id.tv_vedioshow);
+        WebView webView = findViewById(R.id.tv_vedioshow);
 
 
         assert bundle != null;
-        if(bundle.getString(EXTRA_WEBVIEW_URL)!= null)
-        {
+        if (bundle.getString(EXTRA_WEBVIEW_URL) != null) {
             String mVideoUrl = bundle.getString(EXTRA_WEBVIEW_URL);
 
             WebSettings webSettings = webView.getSettings();
@@ -46,6 +45,7 @@ WebView webView=findViewById(R.id.tv_vedioshow);
                 public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                     Toast.makeText(WebViewActivity.this, description, Toast.LENGTH_SHORT).show();
                 }
+
                 @TargetApi(android.os.Build.VERSION_CODES.M)
                 @Override
                 public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError rerr) {

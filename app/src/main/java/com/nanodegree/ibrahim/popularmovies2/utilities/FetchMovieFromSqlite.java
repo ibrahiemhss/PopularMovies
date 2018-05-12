@@ -23,6 +23,7 @@ public class FetchMovieFromSqlite extends AsyncTaskLoader<ArrayList<Movies>> {
         super(context);
         this.listener = listener;
     }
+
     @Override
     protected void onStartLoading() {
         if (movies != null) {
@@ -33,6 +34,7 @@ public class FetchMovieFromSqlite extends AsyncTaskLoader<ArrayList<Movies>> {
             forceLoad();
         }
     }
+
     @Nullable
     @Override
     public ArrayList<Movies> loadInBackground() {
@@ -48,7 +50,8 @@ public class FetchMovieFromSqlite extends AsyncTaskLoader<ArrayList<Movies>> {
 
 
     }
-    public void deliverResult( ArrayList<Movies> movi) {
+
+    public void deliverResult(ArrayList<Movies> movi) {
         movies = movi;
         super.deliverResult(movi);
         listener.onTaskComplete(movi);

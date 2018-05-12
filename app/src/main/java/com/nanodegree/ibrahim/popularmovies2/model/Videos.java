@@ -9,22 +9,6 @@ import android.os.Parcelable;
  */
 
 public class Videos implements Parcelable {
-    private  String key;
-    private  String name;
-    private String type;
-    private String size;
-    private String site;
-public Videos(){
-
-}
-    private Videos(Parcel in) {
-        key = in.readString();
-        name = in.readString();
-        type = in.readString();
-        size = in.readString();
-        site = in.readString();
-    }
-
     public static final Creator<Videos> CREATOR = new Creator<Videos>() {
         @Override
         public Videos createFromParcel(Parcel in) {
@@ -36,8 +20,23 @@ public Videos(){
             return new Videos[size];
         }
     };
+    private String key;
+    private String name;
+    private String type;
+    private String size;
+    private String site;
 
+    public Videos() {
 
+    }
+
+    private Videos(Parcel in) {
+        key = in.readString();
+        name = in.readString();
+        type = in.readString();
+        size = in.readString();
+        site = in.readString();
+    }
 
     public void setSite(String site) {
         this.site = site;

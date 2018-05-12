@@ -18,14 +18,15 @@ import java.util.ArrayList;
  * Created by ibrahim on 08/05/18.
  */
 public class FetchMoviesTaskLoader extends AsyncTaskLoader<ArrayList<Movies>> {
+    private static final String TAG = "FetchMoviesTaskLoader";
     private final AsyncTaskCompleteListener<ArrayList<Movies>> listener;
     private ArrayList<Movies> movies;
-    private static final String TAG = "FetchMoviesTaskLoader";
 
     public FetchMoviesTaskLoader(@NonNull Context context, AsyncTaskCompleteListener<ArrayList<Movies>> listener) {
         super(context);
         this.listener = listener;
     }
+
     @Override
     protected void onStartLoading() {
         if (movies != null) {
@@ -36,29 +37,31 @@ public class FetchMoviesTaskLoader extends AsyncTaskLoader<ArrayList<Movies>> {
             forceLoad();
         }
     }
+
     @Nullable
     @Override
     public ArrayList<Movies> loadInBackground() {
         SharedPrefManager.getInstance(getContext()).getPrefUrlSellected();
-        URL moviesRequestUrl = NetworkUtils.buildUrl(        SharedPrefManager.getInstance(getContext()).getPrefUrlSellected());
+        URL moviesRequestUrl = NetworkUtils.buildUrl(SharedPrefManager.getInstance(getContext()).getPrefUrlSellected());
 
-        String surl= String.valueOf(moviesRequestUrl);
+        String surl = String.valueOf(moviesRequestUrl);
 
         try {
         /*get the value json data com from url
           return value from  OpenMoviesUtils class
            by parseing   json data  into it */
-            Log.v(TAG,"myUrlIs:"+surl);
+            Log.v(TAG, "myUrlIs:" + surl);
 
             return OpenMoviesUtils.getMovies(NetworkUtils
-                            .getResponseFromHttpUrl(moviesRequestUrl));
+                    .getResponseFromHttpUrl(moviesRequestUrl));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
     }
-    public void deliverResult( ArrayList<Movies> movi) {
+
+    public void deliverResult(ArrayList<Movies> movi) {
         movies = movi;
         super.deliverResult(movi);
         listener.onTaskComplete(movi);

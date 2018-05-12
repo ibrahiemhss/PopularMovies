@@ -3,6 +3,7 @@
     <string name="error_message">An error has occurred. Please try again  click to refresh </string>
     <string name="no_favorites">You have not added any movies to your favorites yet :)</string>
     <string name="success_added">Your favorite movie has been successfully added</string>
+    <string name="success_removed">Your favorite movie has been successfully removed from favorites</string>
     <string name="todo">TODO</string>
     <string name="overview">Overview</string>
     <string name="release_date">Release date :</string>
@@ -12,6 +13,6 @@
     <string name="refresh" tools:keep="@string/refresh">Refresh</string>
     <string name="check_intenet">please check internet conncetion</string>
     <string name="add_favorite">add to favorites </string>
-    <string name="remove_favorite">remove from favorites</string>
+    <string name="remove_favorite" tools:keep="@string/remove_favorite">remove from favorites</string>
     <string name="favorites">favorites</string>
 </resources>

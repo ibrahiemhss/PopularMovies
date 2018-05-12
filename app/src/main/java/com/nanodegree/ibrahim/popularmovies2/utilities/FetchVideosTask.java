@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by ibrahim on 05/05/18.
  */
 
-public class FetchVideosTask extends AsyncTaskLoader< ArrayList<Videos>> {
+public class FetchVideosTask extends AsyncTaskLoader<ArrayList<Videos>> {
 
 
     private final AsyncTaskCompleteListener<ArrayList<Videos>> listener;
@@ -49,7 +49,7 @@ public class FetchVideosTask extends AsyncTaskLoader< ArrayList<Videos>> {
     public ArrayList<Videos> loadInBackground() {
           /* If there's no zip code, there's nothing to look up. */
         // *url from methode NetworkUtils.buildUrl by parsing the selected sort of review Movie in path*/
-        URL moviesRequestUrl = NetworkUtils.buildVideoUr(selction,id);
+        URL moviesRequestUrl = NetworkUtils.buildVideoUr(selction, id);
 
         try {
                             /*get the value json data com from url
@@ -65,7 +65,8 @@ public class FetchVideosTask extends AsyncTaskLoader< ArrayList<Videos>> {
             return null;
         }
     }
-    public void deliverResult( ArrayList<Videos> videos) {
+
+    public void deliverResult(ArrayList<Videos> videos) {
         super.deliverResult(videos);
         listener.onTaskComplete(videos);
 
