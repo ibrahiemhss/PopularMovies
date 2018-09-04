@@ -10,3 +10,4 @@ The second part of [PopularMovies](https://github.com/ibrahiemhss/UDACITY_AND_Na
 
 * To fetch popular movies, you will use the API from themoviedb.org
 If you don’t already have an account, you will need to [create one](https://www.themoviedb.org/account/signup) in order to request an API Key.
+* Put Api Key inside gradle.properties as ``` API_KEY="add your api key" ```
